@@ -206,8 +206,27 @@ def send_invitation():
     activities = data.get("activities") or []
     if not isinstance(activities, list):
         activities = []
-    activities = [str(a).strip() for a in activities if str(a).strip()]
-    activities_text = "\n".join(f"  • {a}" for a in activities) if activities else "  • (none selected)"
+
+    activity_lines = []
+    html_activity_items = []
+    for item in activities:
+        if isinstance(item, dict):
+            name = str(item.get("name") or "").strip()
+            desc = str(item.get("description") or "").strip()
+        else:
+            name = str(item).strip()
+            desc = ""
+        if not name:
+            continue
+        line = f"  • {name}"
+        if desc:
+            line += f"\n    {desc}"
+        activity_lines.append(line)
+        html_desc = f"<br><span style='color:#666;font-size:0.9em'>{desc}</span>" if desc else ""
+        html_activity_items.append(f"<li><strong>{name}</strong>{html_desc}</li>")
+
+    activities_text = "\n".join(activity_lines) if activity_lines else "  • (none selected)"
+    html_activities = "".join(html_activity_items) or "<li>(none selected)</li>"
 
     if not recipient or "@" not in recipient:
         return jsonify({"error": "Invalid email address."}), 400
@@ -228,7 +247,7 @@ We can't wait to see you there.
 
 — {SENDER_EMAIL}
 """
-    html_activities = "".join(f"<li>{a}</li>" for a in activities) or "<li>(none selected)</li>"
+    html_activities = "".join(html_activity_items) or "<li>(none selected)</li>"
     html_body = f"""<!DOCTYPE html>
 <html><body style="font-family:sans-serif;line-height:1.6;color:#2a1f1f">
 <p>Hello!</p>

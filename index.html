@@ -217,41 +217,82 @@
       color: #6b5b5b;
     }
 
+    .card.wide {
+      max-width: 520px;
+    }
+
     .activity-list {
       display: flex;
       flex-direction: column;
-      gap: 0.65rem;
-      margin-bottom: 1.25rem;
+      gap: 0.75rem;
+      margin-bottom: 1rem;
       text-align: left;
+      max-height: 420px;
+      overflow-y: auto;
+      padding-right: 0.25rem;
     }
 
-    .activity-option {
-      display: flex;
+    .activity-card {
+      display: grid;
+      grid-template-columns: 72px 1fr auto;
+      gap: 0.75rem;
       align-items: center;
-      gap: 0.65rem;
-      padding: 0.75rem 0.9rem;
+      padding: 0.65rem;
       border: 2px solid #e8dfd0;
-      border-radius: 12px;
+      border-radius: 14px;
       cursor: pointer;
-      transition: border-color 0.2s, background 0.2s;
+      transition: border-color 0.2s, background 0.2s, box-shadow 0.2s;
       user-select: none;
+      background: #fff;
     }
 
-    .activity-option:hover {
+    .activity-card:hover {
       border-color: var(--gold);
-      background: #fffdf8;
+      box-shadow: 0 4px 12px rgba(92, 14, 38, 0.08);
     }
 
-    .activity-option input {
-      width: 1rem;
-      height: 1rem;
+    .activity-card:has(input:checked) {
+      border-color: var(--red);
+      background: #fff8f6;
+      box-shadow: 0 4px 14px rgba(139, 21, 56, 0.12);
+    }
+
+    .activity-card input {
+      width: 1.1rem;
+      height: 1.1rem;
       accent-color: var(--red);
       cursor: pointer;
+      flex-shrink: 0;
     }
 
-    .activity-option span {
-      font-size: 0.95rem;
-      color: var(--text);
+    .activity-img {
+      width: 72px;
+      height: 72px;
+      object-fit: cover;
+      border-radius: 10px;
+      background: #e8dfd0;
+    }
+
+    .activity-body strong {
+      display: block;
+      font-size: 0.92rem;
+      color: var(--red-dark);
+      margin-bottom: 0.25rem;
+    }
+
+    .activity-body p {
+      font-size: 0.78rem;
+      line-height: 1.4;
+      color: #5c4a4a;
+      font-weight: 400;
+    }
+
+    .activity-count {
+      font-size: 0.85rem;
+      color: var(--red);
+      font-weight: 600;
+      margin-bottom: 0.75rem;
+      min-height: 1.25rem;
     }
 
     .btn-no.dodging {
@@ -335,6 +376,19 @@
         min-height: 100px;
       }
 
+      .activity-list {
+        max-height: none;
+      }
+
+      .activity-img {
+        width: 64px;
+        height: 64px;
+      }
+
+      .activity-card {
+        grid-template-columns: 64px 1fr auto;
+      }
+
       .btn-no.dodging {
         min-width: 4.5rem;
         padding: 1rem 1.1rem;
@@ -358,7 +412,7 @@
     <label for="message-log">Reject messages</label>
     <textarea id="message-log" readonly placeholder="Messages appear here when you chase No…"></textarea>
   </aside>
-  <main class="card">
+  <main class="card" id="main-card">
     <!-- Step 1: Email -->
     <section id="step-email" class="step active">
       <span class="badge">Welcome</span>
@@ -392,14 +446,49 @@
     <section id="step-activities" class="step">
       <span class="badge">Plan your trip</span>
       <h1>What do you want to do in Macau?</h1>
-      <p class="subtitle">Pick one or more — we'll include them in your invitation.</p>
+      <p class="subtitle">Select as many activities as you like — tap each card to add or remove.</p>
+      <p class="activity-count" id="activity-count">0 activities selected</p>
       <div class="activity-list" id="activity-list">
-        <label class="activity-option"><input type="checkbox" name="activity" value="Casino & nightlife" /><span>🎰 Casino & nightlife</span></label>
-        <label class="activity-option"><input type="checkbox" name="activity" value="Macanese food tour" /><span>🍜 Macanese food tour</span></label>
-        <label class="activity-option"><input type="checkbox" name="activity" value="Historic sites" /><span>🏛️ Historic sites (Ruins of St. Paul's)</span></label>
-        <label class="activity-option"><input type="checkbox" name="activity" value="Shopping" /><span>🛍️ Shopping</span></label>
-        <label class="activity-option"><input type="checkbox" name="activity" value="Shows & entertainment" /><span>🎭 Shows & entertainment</span></label>
-        <label class="activity-option"><input type="checkbox" name="activity" value="Day trip & sightseeing" /><span>🌊 Day trip & sightseeing</span></label>
+        <label class="activity-card">
+          <img class="activity-img" src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/85/The_Venetian_Macau_2013.jpg/400px-The_Venetian_Macau_2013.jpg" alt="Casino lights in Macau" loading="lazy" />
+          <div class="activity-body">
+            <strong>Casino &amp; nightlife</strong>
+            <p>World-famous casinos, neon skylines, and late-night vibes along the Cotai Strip.</p>
+          </div>
+          <input type="checkbox" name="activity" value="Casino & nightlife" data-description="World-famous casinos, neon skylines, and late-night vibes along the Cotai Strip." />
+        </label>
+        <label class="activity-card">
+          <img class="activity-img" src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4d/Macau_Egg_Tart.jpg/400px-Macau_Egg_Tart.jpg" alt="Macanese egg tart" loading="lazy" />
+          <div class="activity-body">
+            <strong>Macanese food tour</strong>
+            <p>Egg tarts, pork chop buns, African chicken, and fusion flavours unique to Macau.</p>
+          </div>
+          <input type="checkbox" name="activity" value="Macanese food tour" data-description="Egg tarts, pork chop buns, African chicken, and fusion flavours unique to Macau." />
+        </label>
+        <label class="activity-card">
+          <img class="activity-img" src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5a/Ruinas_de_Sao_Paulo_02.JPG/400px-Ruinas_de_Sao_Paulo_02.JPG" alt="Ruins of St Paul's" loading="lazy" />
+          <div class="activity-body">
+            <strong>Historic sites</strong>
+            <p>Walk through UNESCO heritage — Ruins of St. Paul's, Senado Square, and old churches.</p>
+          </div>
+          <input type="checkbox" name="activity" value="Historic sites" data-description="Walk through UNESCO heritage — Ruins of St. Paul's, Senado Square, and old churches." />
+        </label>
+        <label class="activity-card">
+          <img class="activity-img" src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/Senado_Square_Macau.jpg/400px-Senado_Square_Macau.jpg" alt="Senado Square shopping" loading="lazy" />
+          <div class="activity-body">
+            <strong>Shopping</strong>
+            <p>Luxury malls, local boutiques, and souvenirs around Senado Square and Taipa Village.</p>
+          </div>
+          <input type="checkbox" name="activity" value="Shopping" data-description="Luxury malls, local boutiques, and souvenirs around Senado Square and Taipa Village." />
+        </label>
+        <label class="activity-card">
+          <img class="activity-img" src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2e/Macau_Tower_and_Casinos_%28cropped%29.jpg/400px-Macau_Tower_and_Casinos_%28cropped%29.jpg" alt="Macau skyline" loading="lazy" />
+          <div class="activity-body">
+            <strong>Day trip &amp; sightseeing</strong>
+            <p>Macau Tower views, Coloane beaches, A-Ma Temple, and scenic walks across the city.</p>
+          </div>
+          <input type="checkbox" name="activity" value="Day trip & sightseeing" data-description="Macau Tower views, Coloane beaches, A-Ma Temple, and scenic walks across the city." />
+        </label>
       </div>
       <button type="button" class="btn btn-primary" id="btn-activities-continue">Continue to pick a date</button>
     </section>
@@ -472,6 +561,9 @@
     const touchCountEl = document.getElementById("touch-count");
     const messageLogEl = document.getElementById("message-log");
 
+    const mainCard = document.getElementById("main-card");
+    const activityCountEl = document.getElementById("activity-count");
+
     const steps = {
       email: document.getElementById("step-email"),
       invite: document.getElementById("step-invite"),
@@ -483,7 +575,18 @@
     function showStep(name) {
       Object.values(steps).forEach((el) => el.classList.remove("active"));
       steps[name].classList.add("active");
+      mainCard.classList.toggle("wide", name === "activities");
     }
+
+    function updateActivityCount() {
+      const n = document.querySelectorAll('#activity-list input[name="activity"]:checked').length;
+      activityCountEl.textContent =
+        n === 0 ? "0 activities selected" : n === 1 ? "1 activity selected" : `${n} activities selected`;
+    }
+
+    document.querySelectorAll('#activity-list input[name="activity"]').forEach((cb) => {
+      cb.addEventListener("change", updateActivityCount);
+    });
 
     function formatDateYyyyDdMm(isoDate) {
       if (!isoDate) return "—";
@@ -661,12 +764,15 @@
       stopDodgeLoop();
       resetNoButton();
       showStep("activities");
+      updateActivityCount();
     });
 
     document.getElementById("btn-activities-continue").addEventListener("click", () => {
-      selectedActivities = Array.from(
-        document.querySelectorAll('#activity-list input[name="activity"]:checked')
-      ).map((el) => el.value);
+      const checked = document.querySelectorAll('#activity-list input[name="activity"]:checked');
+      selectedActivities = Array.from(checked).map((el) => ({
+        name: el.value,
+        description: el.dataset.description || "",
+      }));
 
       if (selectedActivities.length === 0) {
         alert("Please pick at least one activity!");
