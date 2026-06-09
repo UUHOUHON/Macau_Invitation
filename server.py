@@ -1,11 +1,14 @@
 """
-Macau invitation server — sends email via Gmail SMTP.
-Set GMAIL_APP_PASSWORD in .env (16-character Google App Password, not login password).
+Macau invitation server — sends email via Gmail SMTP (local) or Resend API (Render).
 """
 
+import json
 import os
+import socket
 import smtplib
 import ssl
+import urllib.error
+import urllib.request
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from email.utils import formataddr
@@ -17,13 +20,22 @@ load_dotenv()
 
 SENDER_EMAIL = os.environ.get("SENDER_EMAIL", "houhonuhh@gmail.com").strip()
 GMAIL_APP_PASSWORD = os.environ.get("GMAIL_APP_PASSWORD", "").replace(" ", "")
+RESEND_API_KEY = os.environ.get("RESEND_API_KEY", "").strip()
+RESEND_FROM = os.environ.get(
+    "RESEND_FROM", "Macau Invitation <onboarding@resend.dev>"
+).strip()
 
 app = Flask(__name__, static_folder=".")
 
 APP_PASSWORD_HELP = (
-    "Email is not configured. Create a 16-character Google App Password at "
-    "https://myaccount.google.com/apppasswords then set GMAIL_APP_PASSWORD "
-    "(local: .env file | Render: Environment tab) and redeploy."
+    "Email is not configured. Set GMAIL_APP_PASSWORD (16-char Google App Password) "
+    "for local use, or RESEND_API_KEY from resend.com for Render hosting."
+)
+
+RENDER_SMTP_HELP = (
+    "Gmail SMTP is blocked on Render (network unreachable). "
+    "Sign up free at https://resend.com → API Keys → add RESEND_API_KEY in "
+    "Render Environment → Save and redeploy."
 )
 
 
@@ -34,9 +46,14 @@ def _gmail_auth_error_message(exc: smtplib.SMTPAuthenticationError) -> str:
             return APP_PASSWORD_HELP
         return (
             "Gmail rejected the App Password. Create a new one at "
-            "https://myaccount.google.com/apppasswords and update GMAIL_APP_PASSWORD in .env."
+            "https://myaccount.google.com/apppasswords and update GMAIL_APP_PASSWORD."
         )
-    return "Gmail login failed. Check SENDER_EMAIL and GMAIL_APP_PASSWORD in .env."
+    return "Gmail login failed. Check SENDER_EMAIL and GMAIL_APP_PASSWORD."
+
+
+def _smtp_host_ipv4(host: str, port: int) -> str:
+    infos = socket.getaddrinfo(host, port, socket.AF_INET, socket.SOCK_STREAM)
+    return infos[0][4][0]
 
 
 def send_via_gmail(recipient: str, subject: str, body: str, html_body: str | None = None) -> None:
@@ -51,27 +68,87 @@ def send_via_gmail(recipient: str, subject: str, body: str, html_body: str | Non
     raw = msg.as_string()
     context = ssl.create_default_context()
     last_auth_error = None
+    last_network_error = None
 
     try:
-        with smtplib.SMTP_SSL("smtp.gmail.com", 465, context=context, timeout=30) as server:
-            server.login(SENDER_EMAIL, GMAIL_APP_PASSWORD)
-            server.sendmail(SENDER_EMAIL, [recipient], raw)
-            return
-    except smtplib.SMTPAuthenticationError as exc:
-        last_auth_error = exc
-
-    try:
-        with smtplib.SMTP("smtp.gmail.com", 587, timeout=30) as server:
+        host_ip = _smtp_host_ipv4("smtp.gmail.com", 587)
+        with smtplib.SMTP(host_ip, 587, timeout=30) as server:
+            server.ehlo()
             server.starttls(context=context)
+            server.ehlo()
             server.login(SENDER_EMAIL, GMAIL_APP_PASSWORD)
             server.sendmail(SENDER_EMAIL, [recipient], raw)
             return
     except smtplib.SMTPAuthenticationError as exc:
         last_auth_error = exc
+    except OSError as exc:
+        last_network_error = exc
+
+    try:
+        host_ip = _smtp_host_ipv4("smtp.gmail.com", 465)
+        with smtplib.SMTP_SSL(host_ip, 465, context=context, timeout=30) as server:
+            server.login(SENDER_EMAIL, GMAIL_APP_PASSWORD)
+            server.sendmail(SENDER_EMAIL, [recipient], raw)
+            return
+    except smtplib.SMTPAuthenticationError as exc:
+        last_auth_error = exc
+    except OSError as exc:
+        last_network_error = exc
 
     if last_auth_error:
         raise last_auth_error
+    if last_network_error:
+        raise last_network_error
     raise RuntimeError("Could not connect to Gmail SMTP.")
+
+
+def send_via_resend(recipient: str, subject: str, body: str, html_body: str | None = None) -> None:
+    payload = json.dumps(
+        {
+            "from": RESEND_FROM,
+            "to": [recipient],
+            "reply_to": SENDER_EMAIL,
+            "subject": subject,
+            "text": body,
+            "html": html_body or body.replace("\n", "<br>"),
+        }
+    ).encode("utf-8")
+    req = urllib.request.Request(
+        "https://api.resend.com/emails",
+        data=payload,
+        headers={
+            "Authorization": f"Bearer {RESEND_API_KEY}",
+            "Content-Type": "application/json",
+        },
+        method="POST",
+    )
+    try:
+        with urllib.request.urlopen(req, timeout=30) as resp:
+            if resp.status >= 300:
+                raise RuntimeError(f"Resend returned status {resp.status}")
+    except urllib.error.HTTPError as exc:
+        detail = exc.read().decode(errors="ignore")
+        raise RuntimeError(f"Resend error: {detail}") from exc
+
+
+def send_email(recipient: str, subject: str, body: str, html_body: str | None = None) -> str:
+    """Send email. Returns provider name used: 'resend' or 'gmail'."""
+    on_render = bool(os.environ.get("RENDER"))
+
+    if RESEND_API_KEY:
+        send_via_resend(recipient, subject, body, html_body)
+        return "resend"
+
+    if not GMAIL_APP_PASSWORD or len(GMAIL_APP_PASSWORD) < 16:
+        raise ValueError(APP_PASSWORD_HELP)
+
+    try:
+        send_via_gmail(recipient, subject, body, html_body)
+        return "gmail"
+    except OSError as exc:
+        if on_render or getattr(exc, "errno", None) == 101:
+            raise RuntimeError(RENDER_SMTP_HELP) from exc
+        raise
 
 
 @app.route("/")
@@ -81,24 +158,29 @@ def index():
 
 @app.route("/api/email-status", methods=["GET"])
 def email_status():
-    if not GMAIL_APP_PASSWORD:
-        return jsonify({"configured": False, "hint": APP_PASSWORD_HELP})
+    has_resend = bool(RESEND_API_KEY)
+    has_gmail = len(GMAIL_APP_PASSWORD) >= 16
+    configured = has_resend or has_gmail
     return jsonify(
         {
-            "configured": True,
+            "configured": configured,
             "sender": SENDER_EMAIL,
-            "appPasswordLooksValid": len(GMAIL_APP_PASSWORD) >= 16,
+            "provider": "resend" if has_resend else ("gmail" if has_gmail else "none"),
+            "appPasswordLooksValid": has_gmail,
+            "resendConfigured": has_resend,
+            "onRender": bool(os.environ.get("RENDER")),
+            "hint": None
+            if configured
+            else (RENDER_SMTP_HELP if os.environ.get("RENDER") else APP_PASSWORD_HELP),
         }
     )
 
 
 @app.route("/api/send-invitation", methods=["POST"])
 def send_invitation():
-    if not GMAIL_APP_PASSWORD:
-        return jsonify({"error": APP_PASSWORD_HELP}), 503
-
-    if len(GMAIL_APP_PASSWORD) < 16:
-        return jsonify({"error": APP_PASSWORD_HELP}), 503
+    if not RESEND_API_KEY and (not GMAIL_APP_PASSWORD or len(GMAIL_APP_PASSWORD) < 16):
+        hint = RENDER_SMTP_HELP if os.environ.get("RENDER") else APP_PASSWORD_HELP
+        return jsonify({"error": hint}), 503
 
     data = request.get_json(silent=True) or {}
     recipient = (data.get("email") or "").strip()
@@ -141,13 +223,15 @@ We can't wait to see you there.
 </body></html>"""
 
     try:
-        send_via_gmail(recipient, subject, body, html_body)
-        print(f"[email] Invitation sent to {recipient} (date {visit_date})")
+        provider = send_email(recipient, subject, body, html_body)
+        print(f"[email] Sent via {provider} to {recipient} (date {visit_date})")
     except smtplib.SMTPAuthenticationError as exc:
         return jsonify({"error": _gmail_auth_error_message(exc)}), 500
+    except ValueError as exc:
+        return jsonify({"error": str(exc)}), 503
     except Exception as exc:
         print(f"[email] Failed to {recipient}: {exc}")
-        return jsonify({"error": f"Failed to send email: {exc}"}), 500
+        return jsonify({"error": str(exc)}), 500
 
     return jsonify(
         {
@@ -160,32 +244,24 @@ We can't wait to see you there.
 
 @app.route("/api/send-verification", methods=["POST"])
 def send_verification():
-    """Send a test email to the configured Gmail inbox to verify SMTP works."""
-    if not GMAIL_APP_PASSWORD:
+    if not RESEND_API_KEY and (not GMAIL_APP_PASSWORD or len(GMAIL_APP_PASSWORD) < 16):
         return jsonify({"error": APP_PASSWORD_HELP}), 503
 
-    if len(GMAIL_APP_PASSWORD) < 16:
-        return jsonify({"error": APP_PASSWORD_HELP}), 503
-
-    subject = "Macau Invitation — Gmail verification test"
+    subject = "Macau Invitation — email verification test"
     body = f"""This is a test email from your Macau Invitation app.
 
-If you received this message, Gmail SMTP is working correctly for {SENDER_EMAIL}.
-
-You can share your invitation link with guests — they will receive invitations from this address after picking a date.
+If you received this, email is working for {SENDER_EMAIL}.
 """
 
     try:
-        send_via_gmail(SENDER_EMAIL, subject, body)
-    except smtplib.SMTPAuthenticationError as exc:
-        return jsonify({"error": _gmail_auth_error_message(exc)}), 500
+        send_email(SENDER_EMAIL, subject, body)
     except Exception as exc:
-        return jsonify({"error": f"Failed to send verification: {exc}"}), 500
+        return jsonify({"error": str(exc)}), 500
 
     return jsonify(
         {
             "ok": True,
-            "message": f"Verification email sent to {SENDER_EMAIL}. Check your inbox (and spam).",
+            "message": f"Verification email sent to {SENDER_EMAIL}. Check inbox (and spam).",
         }
     )
 

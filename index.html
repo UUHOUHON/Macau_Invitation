@@ -684,10 +684,13 @@
       try {
         const res = await fetch("/api/email-status");
         const data = await res.json();
-        if (!data.configured || !data.appPasswordLooksValid) {
+        if (!data.configured) {
+          statusEl.className = "status show error";
+          statusEl.textContent = data.hint || "Email not configured on the server.";
+        } else if (data.onRender && !data.resendConfigured) {
           statusEl.className = "status show error";
           statusEl.textContent =
-            "Email not set up yet. On Render: open your service → Environment → set GMAIL_APP_PASSWORD (16-char Google App Password) → Save.";
+            "Render blocks Gmail SMTP. Add a free RESEND_API_KEY from resend.com in Render → Environment → Save.";
         }
       } catch (_) {
         /* server may be offline during local preview */
