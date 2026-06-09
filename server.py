@@ -24,6 +24,13 @@ RESEND_API_KEY = os.environ.get("RESEND_API_KEY", "").strip()
 RESEND_FROM = os.environ.get(
     "RESEND_FROM", "Macau Invitation <onboarding@resend.dev>"
 ).strip()
+BREVO_API_KEY = os.environ.get("BREVO_API_KEY", "").strip()
+
+GUEST_EMAIL_HELP = (
+    "Resend free plan only sends to houhonuhh@gmail.com. "
+    "To email any guest: sign up free at brevo.com → verify houhonuhh@gmail.com as sender "
+    "→ add BREVO_API_KEY in Render Environment → Save and redeploy."
+)
 
 app = Flask(__name__, static_folder=".")
 
@@ -118,6 +125,45 @@ def _parse_resend_error(detail: str, status: int) -> str:
         return f"Resend error: {detail[:200]}"
 
 
+def _resend_sandbox() -> bool:
+    return "onboarding@resend.dev" in RESEND_FROM.lower()
+
+
+def send_via_brevo(recipient: str, subject: str, body: str, html_body: str | None = None) -> None:
+    payload = json.dumps(
+        {
+            "sender": {"name": "Macau Invitation", "email": SENDER_EMAIL},
+            "to": [{"email": recipient}],
+            "replyTo": {"email": SENDER_EMAIL},
+            "subject": subject,
+            "textContent": body,
+            "htmlContent": html_body or body.replace("\n", "<br>"),
+        }
+    ).encode("utf-8")
+    req = urllib.request.Request(
+        "https://api.brevo.com/v3/smtp/email",
+        data=payload,
+        headers={
+            "api-key": BREVO_API_KEY,
+            "Content-Type": "application/json",
+            "Accept": "application/json",
+            "User-Agent": "macau-invitation-web/1.0",
+        },
+        method="POST",
+    )
+    try:
+        with urllib.request.urlopen(req, timeout=30) as resp:
+            if resp.status >= 300:
+                raise RuntimeError(f"Brevo returned status {resp.status}")
+    except urllib.error.HTTPError as exc:
+        detail = exc.read().decode(errors="ignore")
+        try:
+            msg = json.loads(detail).get("message", detail)
+        except json.JSONDecodeError:
+            msg = detail[:200]
+        raise RuntimeError(f"Brevo: {msg}") from exc
+
+
 def send_via_resend(recipient: str, subject: str, body: str, html_body: str | None = None) -> None:
     payload = json.dumps(
         {
@@ -150,10 +196,16 @@ def send_via_resend(recipient: str, subject: str, body: str, html_body: str | No
 
 
 def send_email(recipient: str, subject: str, body: str, html_body: str | None = None) -> str:
-    """Send email. Returns provider name used: 'resend' or 'gmail'."""
+    """Send email. Returns provider name used."""
     on_render = bool(os.environ.get("RENDER"))
 
+    if BREVO_API_KEY:
+        send_via_brevo(recipient, subject, body, html_body)
+        return "brevo"
+
     if RESEND_API_KEY:
+        if _resend_sandbox() and recipient.lower() != SENDER_EMAIL.lower():
+            raise RuntimeError(GUEST_EMAIL_HELP)
         send_via_resend(recipient, subject, body, html_body)
         return "resend"
 
@@ -176,27 +228,42 @@ def index():
 
 @app.route("/api/email-status", methods=["GET"])
 def email_status():
+    has_brevo = bool(BREVO_API_KEY)
     has_resend = bool(RESEND_API_KEY)
     has_gmail = len(GMAIL_APP_PASSWORD) >= 16
-    configured = has_resend or has_gmail
+    configured = has_brevo or has_resend or has_gmail
+    resend_sandbox = has_resend and _resend_sandbox() and not has_brevo
+    provider = (
+        "brevo"
+        if has_brevo
+        else ("resend" if has_resend else ("gmail" if has_gmail else "none"))
+    )
+    hint = None
+    if not configured:
+        hint = RENDER_SMTP_HELP if os.environ.get("RENDER") else APP_PASSWORD_HELP
+    elif resend_sandbox:
+        hint = GUEST_EMAIL_HELP
     return jsonify(
         {
             "configured": configured,
             "sender": SENDER_EMAIL,
-            "provider": "resend" if has_resend else ("gmail" if has_gmail else "none"),
+            "provider": provider,
             "appPasswordLooksValid": has_gmail,
             "resendConfigured": has_resend,
+            "brevoConfigured": has_brevo,
+            "resendSandbox": resend_sandbox,
+            "canEmailAnyone": has_brevo or (has_resend and not _resend_sandbox()),
             "onRender": bool(os.environ.get("RENDER")),
-            "hint": None
-            if configured
-            else (RENDER_SMTP_HELP if os.environ.get("RENDER") else APP_PASSWORD_HELP),
+            "hint": hint,
         }
     )
 
 
 @app.route("/api/send-invitation", methods=["POST"])
 def send_invitation():
-    if not RESEND_API_KEY and (not GMAIL_APP_PASSWORD or len(GMAIL_APP_PASSWORD) < 16):
+    if not BREVO_API_KEY and not RESEND_API_KEY and (
+        not GMAIL_APP_PASSWORD or len(GMAIL_APP_PASSWORD) < 16
+    ):
         hint = RENDER_SMTP_HELP if os.environ.get("RENDER") else APP_PASSWORD_HELP
         return jsonify({"error": hint}), 503
 
@@ -280,7 +347,9 @@ We can't wait to see you there.
 
 @app.route("/api/send-verification", methods=["POST"])
 def send_verification():
-    if not RESEND_API_KEY and (not GMAIL_APP_PASSWORD or len(GMAIL_APP_PASSWORD) < 16):
+    if not BREVO_API_KEY and not RESEND_API_KEY and (
+        not GMAIL_APP_PASSWORD or len(GMAIL_APP_PASSWORD) < 16
+    ):
         return jsonify({"error": APP_PASSWORD_HELP}), 503
 
     subject = "Macau Invitation — email verification test"

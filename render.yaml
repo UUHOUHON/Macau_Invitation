@@ -12,6 +12,8 @@ services:
         sync: false
       - key: RESEND_API_KEY
         sync: false
+      - key: BREVO_API_KEY
+        sync: false
       - key: RESEND_FROM
         value: Macau Invitation <onboarding@resend.dev>
       - key: FLASK_DEBUG

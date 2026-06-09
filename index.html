@@ -463,6 +463,7 @@
         />
         <button type="submit" class="btn btn-primary">Continue</button>
       </form>
+      <p class="status" id="email-hint" role="status"></p>
     </section>
 
     <!-- Step 2: Invitation question -->
@@ -570,6 +571,7 @@
     ];
 
     let userEmail = "";
+    let emailConfig = null;
     let selectedActivities = [];
     let dodgeCount = 0;
     let lastDodgeAt = 0;
@@ -777,11 +779,57 @@
       if (e.touches[0]) updatePointer(e.touches[0].clientX, e.touches[0].clientY);
     }, { passive: true });
 
+    async function fetchEmailConfig() {
+      try {
+        const res = await fetch("/api/email-status");
+        emailConfig = await res.json();
+        updateEmailHint();
+      } catch (_) {
+        emailConfig = null;
+      }
+    }
+
+    function updateEmailHint() {
+      const hintEl = document.getElementById("email-hint");
+      if (!emailConfig || !steps.email.classList.contains("active")) return;
+      const input = document.getElementById("user-email");
+      const email = input.value.trim().toLowerCase();
+      const sender = (emailConfig.sender || "").toLowerCase();
+
+      if (emailConfig.resendSandbox && email && email !== sender) {
+        hintEl.className = "status show error";
+        hintEl.textContent =
+          emailConfig.hint ||
+          "Only houhonuhh@gmail.com can receive emails right now. Set up Brevo on Render to email any guest.";
+      } else if (emailConfig.resendSandbox) {
+        hintEl.className = "status show loading";
+        hintEl.textContent =
+          "Testing mode: invitations only send to houhonuhh@gmail.com until Brevo is configured.";
+      } else {
+        hintEl.className = "status";
+        hintEl.textContent = "";
+      }
+    }
+
+    document.getElementById("user-email").addEventListener("input", updateEmailHint);
+    fetchEmailConfig();
+
     document.getElementById("email-form").addEventListener("submit", (e) => {
       e.preventDefault();
       const input = document.getElementById("user-email");
       userEmail = input.value.trim();
       if (!userEmail) return;
+
+      if (
+        emailConfig?.resendSandbox &&
+        userEmail.toLowerCase() !== (emailConfig.sender || "").toLowerCase()
+      ) {
+        alert(
+          "Right now only houhonuhh@gmail.com can receive invitations.\n\n" +
+            "To email any guest: add BREVO_API_KEY on Render (free at brevo.com)."
+        );
+        return;
+      }
 
       document.getElementById("show-email").textContent = `Registered: ${userEmail}`;
       document.getElementById("prompt-message").textContent = "";
@@ -855,21 +903,26 @@
 
     async function checkEmailReady() {
       const statusEl = document.getElementById("status");
-      try {
-        const res = await fetch("/api/email-status");
-        const data = await res.json();
-        if (!data.configured) {
+      await fetchEmailConfig();
+      if (!emailConfig) return;
+
+      if (!emailConfig.configured) {
+        statusEl.className = "status show error";
+        statusEl.textContent = emailConfig.hint || "Email not configured on the server.";
+      } else if (emailConfig.resendSandbox) {
+        const sender = (emailConfig.sender || "").toLowerCase();
+        if (userEmail.toLowerCase() !== sender) {
           statusEl.className = "status show error";
-          statusEl.textContent = data.hint || "Email not configured on the server.";
-        } else if (data.onRender && !data.resendConfigured) {
-          statusEl.className = "status show error";
-          statusEl.textContent =
-            "Render blocks Gmail SMTP. Add a free RESEND_API_KEY from resend.com in Render → Environment → Save.";
+          statusEl.textContent = emailConfig.hint || GUEST_EMAIL_FALLBACK;
         }
-      } catch (_) {
-        /* server may be offline during local preview */
+      } else {
+        statusEl.className = "status";
+        statusEl.textContent = "";
       }
     }
+
+    const GUEST_EMAIL_FALLBACK =
+      "Add BREVO_API_KEY on Render to email guests (free at brevo.com).";
 
     btnNo.addEventListener("click", (e) => {
       e.preventDefault();
