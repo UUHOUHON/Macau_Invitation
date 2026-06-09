@@ -247,7 +247,6 @@ We can't wait to see you there.
 
 — {SENDER_EMAIL}
 """
-    html_activities = "".join(html_activity_items) or "<li>(none selected)</li>"
     html_body = f"""<!DOCTYPE html>
 <html><body style="font-family:sans-serif;line-height:1.6;color:#2a1f1f">
 <p>Hello!</p>
