@@ -21,10 +21,9 @@ GMAIL_APP_PASSWORD = os.environ.get("GMAIL_APP_PASSWORD", "").replace(" ", "")
 app = Flask(__name__, static_folder=".")
 
 APP_PASSWORD_HELP = (
-    "Gmail needs a 16-character App Password (not your normal Gmail password). "
-    "Turn on 2-Step Verification, then create one at "
-    "https://myaccount.google.com/apppasswords — put it in .env as GMAIL_APP_PASSWORD "
-    "and restart the server."
+    "Email is not configured. Create a 16-character Google App Password at "
+    "https://myaccount.google.com/apppasswords then set GMAIL_APP_PASSWORD "
+    "(local: .env file | Render: Environment tab) and redeploy."
 )
 
 
