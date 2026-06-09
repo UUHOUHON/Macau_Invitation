@@ -102,6 +102,22 @@ def send_via_gmail(recipient: str, subject: str, body: str, html_body: str | Non
     raise RuntimeError("Could not connect to Gmail SMTP.")
 
 
+def _parse_resend_error(detail: str, status: int) -> str:
+    try:
+        data = json.loads(detail)
+        msg = data.get("message", detail)
+        if status == 403 and "verify a domain" in msg.lower():
+            return (
+                "Resend free plan can only email houhonuhh@gmail.com until you verify a domain. "
+                "Go to resend.com/domains to add one, or test with your Gmail address first."
+            )
+        return f"Resend: {msg}"
+    except json.JSONDecodeError:
+        if "1010" in detail:
+            return "Resend connection blocked. Redeploy after the latest update (User-Agent fix)."
+        return f"Resend error: {detail[:200]}"
+
+
 def send_via_resend(recipient: str, subject: str, body: str, html_body: str | None = None) -> None:
     payload = json.dumps(
         {
@@ -119,6 +135,8 @@ def send_via_resend(recipient: str, subject: str, body: str, html_body: str | No
         headers={
             "Authorization": f"Bearer {RESEND_API_KEY}",
             "Content-Type": "application/json",
+            "User-Agent": "macau-invitation-web/1.0 (Render)",
+            "Accept": "application/json",
         },
         method="POST",
     )
@@ -128,7 +146,7 @@ def send_via_resend(recipient: str, subject: str, body: str, html_body: str | No
                 raise RuntimeError(f"Resend returned status {resp.status}")
     except urllib.error.HTTPError as exc:
         detail = exc.read().decode(errors="ignore")
-        raise RuntimeError(f"Resend error: {detail}") from exc
+        raise RuntimeError(_parse_resend_error(detail, exc.code)) from exc
 
 
 def send_email(recipient: str, subject: str, body: str, html_body: str | None = None) -> str:
