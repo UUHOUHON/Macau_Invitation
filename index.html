@@ -217,6 +217,34 @@
       color: #6b5b5b;
     }
 
+    .btn-back {
+      width: auto;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      padding: 0.45rem 0.85rem;
+      margin-bottom: 1rem;
+      background: transparent;
+      color: #7a6565;
+      border: 2px solid #e8dfd0;
+      font-size: 0.88rem;
+      font-weight: 600;
+      box-shadow: none;
+    }
+
+    .btn-back:hover {
+      transform: none;
+      border-color: var(--gold);
+      color: var(--red-dark);
+      background: #fffdf8;
+    }
+
+    .btn-send:disabled {
+      opacity: 0.55;
+      cursor: not-allowed;
+      transform: none;
+    }
+
     .card.wide {
       max-width: 520px;
     }
@@ -234,7 +262,7 @@
 
     .activity-card {
       display: grid;
-      grid-template-columns: 72px 1fr auto;
+      grid-template-columns: 3rem 1fr auto;
       gap: 0.75rem;
       align-items: center;
       padding: 0.65rem;
@@ -265,12 +293,16 @@
       flex-shrink: 0;
     }
 
-    .activity-img {
-      width: 72px;
-      height: 72px;
-      object-fit: cover;
+    .activity-icon {
+      width: 3rem;
+      height: 3rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.65rem;
       border-radius: 10px;
-      background: #e8dfd0;
+      background: linear-gradient(145deg, var(--gold-light), #fff8e7);
+      flex-shrink: 0;
     }
 
     .activity-body strong {
@@ -380,13 +412,14 @@
         max-height: none;
       }
 
-      .activity-img {
-        width: 64px;
-        height: 64px;
+      .activity-card {
+        grid-template-columns: 2.75rem 1fr auto;
       }
 
-      .activity-card {
-        grid-template-columns: 64px 1fr auto;
+      .activity-icon {
+        width: 2.75rem;
+        height: 2.75rem;
+        font-size: 1.45rem;
       }
 
       .btn-no.dodging {
@@ -434,6 +467,7 @@
 
     <!-- Step 2: Invitation question -->
     <section id="step-invite" class="step">
+      <button type="button" class="btn btn-back" id="back-to-email">← Back</button>
       <span class="badge">Macau</span>
       <p class="registered-email" id="show-email"></p>
       <h1>Would you accept the invitation to Macau?</h1>
@@ -444,13 +478,14 @@
 
     <!-- Step 3: Activities -->
     <section id="step-activities" class="step">
+      <button type="button" class="btn btn-back" id="back-to-invite">← Back</button>
       <span class="badge">Plan your trip</span>
       <h1>What do you want to do in Macau?</h1>
       <p class="subtitle">Select as many activities as you like — tap each card to add or remove.</p>
       <p class="activity-count" id="activity-count">0 activities selected</p>
       <div class="activity-list" id="activity-list">
         <label class="activity-card">
-          <img class="activity-img" src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/85/The_Venetian_Macau_2013.jpg/400px-The_Venetian_Macau_2013.jpg" alt="Casino lights in Macau" loading="lazy" />
+          <span class="activity-icon" aria-hidden="true">🎰</span>
           <div class="activity-body">
             <strong>Casino &amp; nightlife</strong>
             <p>World-famous casinos, neon skylines, and late-night vibes along the Cotai Strip.</p>
@@ -458,7 +493,7 @@
           <input type="checkbox" name="activity" value="Casino & nightlife" data-description="World-famous casinos, neon skylines, and late-night vibes along the Cotai Strip." />
         </label>
         <label class="activity-card">
-          <img class="activity-img" src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4d/Macau_Egg_Tart.jpg/400px-Macau_Egg_Tart.jpg" alt="Macanese egg tart" loading="lazy" />
+          <span class="activity-icon" aria-hidden="true">🍜</span>
           <div class="activity-body">
             <strong>Macanese food tour</strong>
             <p>Egg tarts, pork chop buns, African chicken, and fusion flavours unique to Macau.</p>
@@ -466,7 +501,7 @@
           <input type="checkbox" name="activity" value="Macanese food tour" data-description="Egg tarts, pork chop buns, African chicken, and fusion flavours unique to Macau." />
         </label>
         <label class="activity-card">
-          <img class="activity-img" src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5a/Ruinas_de_Sao_Paulo_02.JPG/400px-Ruinas_de_Sao_Paulo_02.JPG" alt="Ruins of St Paul's" loading="lazy" />
+          <span class="activity-icon" aria-hidden="true">🏛️</span>
           <div class="activity-body">
             <strong>Historic sites</strong>
             <p>Walk through UNESCO heritage — Ruins of St. Paul's, Senado Square, and old churches.</p>
@@ -474,7 +509,7 @@
           <input type="checkbox" name="activity" value="Historic sites" data-description="Walk through UNESCO heritage — Ruins of St. Paul's, Senado Square, and old churches." />
         </label>
         <label class="activity-card">
-          <img class="activity-img" src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/Senado_Square_Macau.jpg/400px-Senado_Square_Macau.jpg" alt="Senado Square shopping" loading="lazy" />
+          <span class="activity-icon" aria-hidden="true">🛍️</span>
           <div class="activity-body">
             <strong>Shopping</strong>
             <p>Luxury malls, local boutiques, and souvenirs around Senado Square and Taipa Village.</p>
@@ -482,7 +517,7 @@
           <input type="checkbox" name="activity" value="Shopping" data-description="Luxury malls, local boutiques, and souvenirs around Senado Square and Taipa Village." />
         </label>
         <label class="activity-card">
-          <img class="activity-img" src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2e/Macau_Tower_and_Casinos_%28cropped%29.jpg/400px-Macau_Tower_and_Casinos_%28cropped%29.jpg" alt="Macau skyline" loading="lazy" />
+          <span class="activity-icon" aria-hidden="true">🌊</span>
           <div class="activity-body">
             <strong>Day trip &amp; sightseeing</strong>
             <p>Macau Tower views, Coloane beaches, A-Ma Temple, and scenic walks across the city.</p>
@@ -495,15 +530,16 @@
 
     <!-- Step 4: Date -->
     <section id="step-date" class="step">
+      <button type="button" class="btn btn-back" id="back-to-activities">← Back</button>
       <span class="badge">Almost there</span>
       <div class="confetti">🎉</div>
       <h1>Pick your date</h1>
-      <p class="subtitle">Choose your visit date — we'll email your invitation automatically.</p>
+      <p class="subtitle">Choose your visit date, then click Send invitation.</p>
       <form id="date-form">
         <label for="visit-date">Date (YYYY/DD/MM)</label>
         <input type="date" id="visit-date" name="date" required />
         <p class="date-hint" id="formatted-date">Selected: —</p>
-        <button type="submit" class="btn btn-primary" id="send-btn" hidden>Send invitation</button>
+        <button type="submit" class="btn btn-primary btn-send" id="send-btn" disabled>Send invitation</button>
       </form>
       <p class="status" id="status" role="status"></p>
     </section>
@@ -633,15 +669,19 @@
       pointerInsideNo = inside;
     }
 
-    function resetNoButton() {
+    function resetNoButtonPosition() {
       stopDodgeLoop();
-      dodgeCount = 0;
-      lastDodgeAt = 0;
-      resetScores();
       btnNo.classList.remove("dodging");
       btnNo.style.left = "";
       btnNo.style.top = "";
       btnNo.style.width = "";
+    }
+
+    function resetNoButton() {
+      resetNoButtonPosition();
+      dodgeCount = 0;
+      lastDodgeAt = 0;
+      resetScores();
     }
 
     function enableNoDodge() {
@@ -762,9 +802,30 @@
 
     document.getElementById("btn-yes").addEventListener("click", () => {
       stopDodgeLoop();
-      resetNoButton();
+      resetNoButtonPosition();
       showStep("activities");
       updateActivityCount();
+    });
+
+    document.getElementById("back-to-email").addEventListener("click", () => {
+      stopDodgeLoop();
+      resetNoButtonPosition();
+      showStep("email");
+    });
+
+    document.getElementById("back-to-invite").addEventListener("click", () => {
+      showStep("invite");
+      requestAnimationFrame(() => {
+        if (!btnNo.classList.contains("dodging")) enableNoDodge();
+        startDodgeLoop();
+      });
+    });
+
+    document.getElementById("back-to-activities").addEventListener("click", () => {
+      sendingInvitation = false;
+      document.getElementById("status").className = "status";
+      document.getElementById("send-btn").disabled = !document.getElementById("visit-date").value;
+      showStep("activities");
     });
 
     document.getElementById("btn-activities-continue").addEventListener("click", () => {
@@ -781,7 +842,14 @@
 
       showStep("date");
       const today = new Date().toISOString().slice(0, 10);
-      document.getElementById("visit-date").min = today;
+      const dateInput = document.getElementById("visit-date");
+      const sendBtn = document.getElementById("send-btn");
+      dateInput.min = today;
+      dateInput.value = "";
+      document.getElementById("formatted-date").textContent = "Selected: —";
+      sendBtn.disabled = true;
+      sendingInvitation = false;
+      document.getElementById("status").className = "status";
       checkEmailReady();
     });
 
@@ -856,15 +924,20 @@
 
     document.getElementById("visit-date").addEventListener("change", (e) => {
       const isoDate = e.target.value;
+      const sendBtn = document.getElementById("send-btn");
       document.getElementById("formatted-date").textContent =
         "Selected: " + formatDateYyyyDdMm(isoDate);
-      if (isoDate) sendInvitation(isoDate);
+      sendBtn.disabled = !isoDate;
     });
 
     document.getElementById("date-form").addEventListener("submit", (e) => {
       e.preventDefault();
       const isoDate = document.getElementById("visit-date").value;
-      if (isoDate) sendInvitation(isoDate);
+      if (!isoDate) {
+        alert("Please pick a date first.");
+        return;
+      }
+      sendInvitation(isoDate);
     });
   </script>
 </body>
