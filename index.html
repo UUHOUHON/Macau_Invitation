@@ -577,42 +577,42 @@
         <label class="activity-card">
           <span class="activity-icon" aria-hidden="true">🎰</span>
           <div class="activity-body">
-            <strong>Casino &amp; nightlife</strong>
-            <p>World-famous casinos, neon skylines, and late-night vibes along the Cotai Strip.</p>
+            <strong class="activity-name"></strong>
+            <p class="activity-desc"></p>
           </div>
-          <input type="checkbox" name="activity" value="Casino & nightlife" data-description="World-famous casinos, neon skylines, and late-night vibes along the Cotai Strip." />
+          <input type="checkbox" name="activity" data-activity-id="casino" />
         </label>
         <label class="activity-card">
           <span class="activity-icon" aria-hidden="true">🍜</span>
           <div class="activity-body">
-            <strong>Macanese food tour</strong>
-            <p>Egg tarts, pork chop buns, African chicken, and fusion flavours unique to Macau.</p>
+            <strong class="activity-name"></strong>
+            <p class="activity-desc"></p>
           </div>
-          <input type="checkbox" name="activity" value="Macanese food tour" data-description="Egg tarts, pork chop buns, African chicken, and fusion flavours unique to Macau." />
+          <input type="checkbox" name="activity" data-activity-id="food" />
         </label>
         <label class="activity-card">
           <span class="activity-icon" aria-hidden="true">🏛️</span>
           <div class="activity-body">
-            <strong>Historic sites</strong>
-            <p>Walk through UNESCO heritage — Ruins of St. Paul's, Senado Square, and old churches.</p>
+            <strong class="activity-name"></strong>
+            <p class="activity-desc"></p>
           </div>
-          <input type="checkbox" name="activity" value="Historic sites" data-description="Walk through UNESCO heritage — Ruins of St. Paul's, Senado Square, and old churches." />
+          <input type="checkbox" name="activity" data-activity-id="historic" />
         </label>
         <label class="activity-card">
           <span class="activity-icon" aria-hidden="true">🛍️</span>
           <div class="activity-body">
-            <strong>Shopping</strong>
-            <p>Luxury malls, local boutiques, and souvenirs around Senado Square and Taipa Village.</p>
+            <strong class="activity-name"></strong>
+            <p class="activity-desc"></p>
           </div>
-          <input type="checkbox" name="activity" value="Shopping" data-description="Luxury malls, local boutiques, and souvenirs around Senado Square and Taipa Village." />
+          <input type="checkbox" name="activity" data-activity-id="shopping" />
         </label>
         <label class="activity-card">
           <span class="activity-icon" aria-hidden="true">🌊</span>
           <div class="activity-body">
-            <strong>Day trip &amp; sightseeing</strong>
-            <p>Macau Tower views, Coloane beaches, A-Ma Temple, and scenic walks across the city.</p>
+            <strong class="activity-name"></strong>
+            <p class="activity-desc"></p>
           </div>
-          <input type="checkbox" name="activity" value="Day trip & sightseeing" data-description="Macau Tower views, Coloane beaches, A-Ma Temple, and scenic walks across the city." />
+          <input type="checkbox" name="activity" data-activity-id="sightseeing" />
         </label>
       </div>
       <button type="button" class="btn btn-primary" id="btn-activities-continue">Continue to pick a date</button>
@@ -659,6 +659,14 @@
         badgeActivities: "Plan your trip", titleActivities: "What do you want to do in Macau?",
         subtitleActivities: "Select as many activities as you like — tap each card to add or remove.",
         activity0: "0 activities selected", activity1: "1 activity selected",
+        activityN: "activities selected",
+        activities: {
+          casino: { name: "Casino & nightlife", desc: "World-famous casinos, neon skylines, and late-night vibes along the Cotai Strip." },
+          food: { name: "Macanese food tour", desc: "Egg tarts, pork chop buns, African chicken, and fusion flavours unique to Macau." },
+          historic: { name: "Historic sites", desc: "Walk through UNESCO heritage — Ruins of St. Paul's, Senado Square, and old churches." },
+          shopping: { name: "Shopping", desc: "Luxury malls, local boutiques, and souvenirs around Senado Square and Taipa Village." },
+          sightseeing: { name: "Day trip & sightseeing", desc: "Macau Tower views, Coloane beaches, A-Ma Temple, and scenic walks across the city." },
+        },
         btnActivities: "Continue to pick a date",
         badgeDate: "Almost there", titleDate: "Pick your date",
         subtitleDate: "Choose your visit date, then click Send invitation.",
@@ -697,6 +705,14 @@
         badgeActivities: "規劃行程", titleActivities: "你想在澳門做什麼？",
         subtitleActivities: "可複選多項活動 — 點擊卡片加入或取消。",
         activity0: "已選 0 項活動", activity1: "已選 1 項活動",
+        activityN: "項活動已選",
+        activities: {
+          casino: { name: "賭場與夜生活", desc: "世界知名賭場、霓虹天際線，以及路氹城的深夜氛圍。" },
+          food: { name: "澳門美食之旅", desc: "蛋撻、豬扒包、非洲雞，還有澳門獨有的融合風味。" },
+          historic: { name: "歷史古蹟", desc: "漫步世界遺產 — 大三巴牌坊、議事亭前地與古老教堂。" },
+          shopping: { name: "購物", desc: "豪華商場、特色小店，議事亭前地與氹仔舊城的紀念品。" },
+          sightseeing: { name: "一日遊與觀光", desc: "澳門塔景色、路環海灘、媽閣廟，以及城市漫步。" },
+        },
         btnActivities: "繼續選擇日期",
         badgeDate: "快完成了", titleDate: "選擇日期",
         subtitleDate: "選好日期後，點擊發送邀請。",
@@ -734,6 +750,14 @@
         badgeActivities: "計劃行程", titleActivities: "你想喺澳門做咩？",
         subtitleActivities: "可以揀多項 — 撳卡片加入或取消。",
         activity0: "揀咗 0 項", activity1: "揀咗 1 項",
+        activityN: "項已揀",
+        activities: {
+          casino: { name: "賭場同夜生活", desc: "世界出名賭場、霓虹夜景，同路氹城嘅深夜氣氛。" },
+          food: { name: "澳門美食團", desc: "蛋撻、豬扒包、非洲雞，仲有澳門獨有嘅fusion味。" },
+          historic: { name: "歷史古蹟", desc: "行世界遺產 — 大三巴、議事亭前地同古老教堂。" },
+          shopping: { name: "購物", desc: "名牌商場、特色舖頭，議事亭前地同氹仔舊城嘅手信。" },
+          sightseeing: { name: "一日遊同觀光", desc: "澳門塔景致、路環沙灘、媽閣廟，同城市漫步。" },
+        },
         btnActivities: "繼續揀日期",
         badgeDate: "差少少", titleDate: "揀日期",
         subtitleDate: "揀好日期之後，撳發送邀請。",
@@ -835,7 +859,20 @@
       document.querySelectorAll(".lang-btn").forEach((b) => {
         b.classList.toggle("selected", b.dataset.lang === lang);
       });
+      applyActivitiesLanguage();
       updateActivityCount();
+    }
+
+    function applyActivitiesLanguage() {
+      const acts = t().activities;
+      document.querySelectorAll('#activity-list input[data-activity-id]').forEach((input) => {
+        const id = input.dataset.activityId;
+        const data = acts[id];
+        if (!data) return;
+        const card = input.closest(".activity-card");
+        card.querySelector(".activity-name").textContent = data.name;
+        card.querySelector(".activity-desc").textContent = data.desc;
+      });
     }
 
     function showStep(name) {
@@ -850,7 +887,7 @@
       const n = document.querySelectorAll('#activity-list input[name="activity"]:checked').length;
       if (n === 0) activityCountEl.textContent = tr.activity0;
       else if (n === 1) activityCountEl.textContent = tr.activity1;
-      else activityCountEl.textContent = `${n} ${lang === "en-SG" ? "activities selected" : lang === "zh-TW" ? "項活動已選" : "項已揀"}`;
+      else activityCountEl.textContent = `${n} ${t().activityN}`;
     }
 
     document.querySelectorAll('#activity-list input[name="activity"]').forEach((cb) => {
@@ -1205,10 +1242,11 @@
 
     document.getElementById("btn-activities-continue").addEventListener("click", () => {
       const checked = document.querySelectorAll('#activity-list input[name="activity"]:checked');
-      selectedActivities = Array.from(checked).map((el) => ({
-        name: el.value,
-        description: el.dataset.description || "",
-      }));
+      selectedActivities = Array.from(checked).map((el) => {
+        const id = el.dataset.activityId;
+        const data = t().activities[id] || {};
+        return { id, name: data.name || id, description: data.desc || "" };
+      });
 
       if (selectedActivities.length === 0) {
         alert(t().alertActivity);
