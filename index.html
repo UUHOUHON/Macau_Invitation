@@ -51,6 +51,72 @@
       border-radius: 16px;
       padding: 1.1rem;
       box-shadow: var(--shadow);
+      display: none;
+    }
+
+    .score-panel.visible {
+      display: block;
+    }
+
+    .lang-options {
+      display: flex;
+      flex-direction: column;
+      gap: 0.65rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .lang-btn {
+      text-align: left;
+      padding: 1rem 1.1rem;
+      border: 2px solid #e8dfd0;
+      border-radius: 14px;
+      background: #fff;
+      cursor: pointer;
+      transition: border-color 0.2s, background 0.2s;
+    }
+
+    .lang-btn:hover,
+    .lang-btn.selected {
+      border-color: var(--red);
+      background: #fff8f6;
+    }
+
+    .lang-btn strong {
+      display: block;
+      color: var(--red-dark);
+      font-size: 1rem;
+      margin-bottom: 0.2rem;
+    }
+
+    .lang-btn span {
+      font-size: 0.82rem;
+      color: #5c4a4a;
+    }
+
+    #explosion-layer {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 10002;
+      overflow: hidden;
+    }
+
+    .explosion-burst {
+      position: fixed;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      animation: burst 0.55s ease-out forwards;
+    }
+
+    @keyframes burst {
+      0% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+      100% { opacity: 0; transform: translate(var(--tx), var(--ty)) scale(0.2); }
+    }
+
+    .btn-no.exploding {
+      visibility: hidden;
     }
 
     .score-panel h2 {
@@ -431,28 +497,51 @@
   </style>
 </head>
 <body>
+  <div id="explosion-layer" aria-hidden="true"></div>
   <div class="app-layout">
   <aside class="score-panel" id="score-panel">
-    <h2>Scoreboard</h2>
+    <h2 id="txt-scoreboard">Scoreboard</h2>
     <div class="score-box">
-      <h3>No button escapes</h3>
+      <h3 id="txt-escapes">No button escapes</h3>
       <div class="score-value" id="move-count">0</div>
     </div>
     <div class="score-box">
-      <h3>Reject your Reject</h3>
+      <h3 id="txt-reject-score">Reject your Reject</h3>
       <div class="score-value" id="touch-count">0</div>
     </div>
-    <label for="message-log">Reject messages</label>
+    <label for="message-log" id="txt-reject-log-label">Reject messages</label>
     <textarea id="message-log" readonly placeholder="Messages appear here when you chase No…"></textarea>
   </aside>
   <main class="card" id="main-card">
+    <!-- Step 0: Language -->
+    <section id="step-language" class="step active">
+      <span class="badge" id="badge-language">Welcome</span>
+      <h1 id="title-language">Choose your language</h1>
+      <p class="subtitle" id="subtitle-language">Pick how you'd like to read your Macau invitation.</p>
+      <div class="lang-options">
+        <button type="button" class="lang-btn" data-lang="yue">
+          <strong>廣東話</strong>
+          <span>Cantonese</span>
+        </button>
+        <button type="button" class="lang-btn" data-lang="zh-TW">
+          <strong>繁體中文（台灣）</strong>
+          <span>Chinese — Taiwan edition</span>
+        </button>
+        <button type="button" class="lang-btn" data-lang="en-SG">
+          <strong>English (Singapore)</strong>
+          <span>Singlish vibes included lah</span>
+        </button>
+      </div>
+    </section>
+
     <!-- Step 1: Email -->
-    <section id="step-email" class="step active">
-      <span class="badge">Welcome</span>
-      <h1>You're invited</h1>
-      <p class="subtitle">Enter your email to open your personal Macau invitation.</p>
+    <section id="step-email" class="step">
+      <button type="button" class="btn btn-back" id="back-to-language">← Back</button>
+      <span class="badge" id="badge-email">Welcome</span>
+      <h1 id="title-email">You're invited</h1>
+      <p class="subtitle" id="subtitle-email">Enter your email to open your personal Macau invitation.</p>
       <form id="email-form">
-        <label for="user-email">Your email</label>
+        <label for="user-email" id="label-email">Your email</label>
         <input
           type="email"
           id="user-email"
@@ -461,7 +550,7 @@
           required
           autocomplete="email"
         />
-        <button type="submit" class="btn btn-primary">Continue</button>
+        <button type="submit" class="btn btn-primary" id="btn-email-continue">Continue</button>
       </form>
       <p class="status" id="email-hint" role="status"></p>
     </section>
@@ -469,9 +558,9 @@
     <!-- Step 2: Invitation question -->
     <section id="step-invite" class="step">
       <button type="button" class="btn btn-back" id="back-to-email">← Back</button>
-      <span class="badge">Macau</span>
+      <span class="badge" id="badge-invite">Macau</span>
       <p class="registered-email" id="show-email"></p>
-      <h1>Would you accept the invitation to Macau?</h1>
+      <h1 id="title-invite">Would you accept the invitation to Macau?</h1>
       <p class="prompt-message" id="prompt-message"></p>
       <button type="button" class="btn btn-yes" id="btn-yes">Yes! I will love to!</button>
       <button type="button" class="btn btn-no" id="btn-no">No</button>
@@ -480,9 +569,9 @@
     <!-- Step 3: Activities -->
     <section id="step-activities" class="step">
       <button type="button" class="btn btn-back" id="back-to-invite">← Back</button>
-      <span class="badge">Plan your trip</span>
-      <h1>What do you want to do in Macau?</h1>
-      <p class="subtitle">Select as many activities as you like — tap each card to add or remove.</p>
+      <span class="badge" id="badge-activities">Plan your trip</span>
+      <h1 id="title-activities">What do you want to do in Macau?</h1>
+      <p class="subtitle" id="subtitle-activities">Select as many activities as you like — tap each card to add or remove.</p>
       <p class="activity-count" id="activity-count">0 activities selected</p>
       <div class="activity-list" id="activity-list">
         <label class="activity-card">
@@ -527,17 +616,18 @@
         </label>
       </div>
       <button type="button" class="btn btn-primary" id="btn-activities-continue">Continue to pick a date</button>
+      <!-- btn text updated via i18n -->
     </section>
 
     <!-- Step 4: Date -->
     <section id="step-date" class="step">
       <button type="button" class="btn btn-back" id="back-to-activities">← Back</button>
-      <span class="badge">Almost there</span>
+      <span class="badge" id="badge-date">Almost there</span>
       <div class="confetti">🎉</div>
-      <h1>Pick your date</h1>
-      <p class="subtitle">Choose your visit date, then click Send invitation.</p>
+      <h1 id="title-date">Pick your date</h1>
+      <p class="subtitle" id="subtitle-date">Choose your visit date, then click Send invitation.</p>
       <form id="date-form">
-        <label for="visit-date">Date (YYYY/DD/MM)</label>
+        <label for="visit-date" id="label-date">Date (YYYY/DD/MM)</label>
         <input type="date" id="visit-date" name="date" required />
         <p class="date-hint" id="formatted-date">Selected: —</p>
         <button type="submit" class="btn btn-primary btn-send" id="send-btn" disabled>Send invitation</button>
@@ -548,32 +638,131 @@
     <!-- Step 5: Done -->
     <section id="step-done" class="step">
       <div class="confetti">✈️</div>
-      <h1>Invitation sent!</h1>
-      <p class="subtitle">Check your inbox and <strong>spam folder</strong> for the invitation from houhonuhh@gmail.com.</p>
+      <h1 id="title-done">Invitation sent!</h1>
+      <p class="subtitle" id="subtitle-done">Check your inbox and <strong>spam folder</strong> for the invitation from houhonuhh@gmail.com.</p>
     </section>
   </main>
   </div>
 
   <script>
-    const NO_MESSAGES = [
-      "Are you sure?",
-      "Maybe think again lah?",
-      "Wah, you serious ah?",
-      "Jialat — why say no?",
-      "Aiya, Macau very shiok one!",
-      "Don't play play lah — say Yes!",
-      "Confirm plus chop want to reject?",
-      "Cannot lah, must go one!",
-      "You siao ah, say no for what?",
-      "Shiok trip leh, just say Yes can already!",
-      "Alamak, the No button running away already!",
-      "Steady pom pi pi — click Yes lah!",
-    ];
+    const TRANSLATIONS = {
+      "en-SG": {
+        badgeLanguage: "Welcome", titleLanguage: "Choose your language",
+        subtitleLanguage: "Pick how you'd like to read your Macau invitation.",
+        badgeEmail: "Welcome", titleEmail: "You're invited",
+        subtitleEmail: "Enter your email to open your personal Macau invitation.",
+        labelEmail: "Your email", btnContinue: "Continue", btnBack: "← Back",
+        badgeInvite: "Macau", inviteQuestion: "Would you accept the invitation to Macau?",
+        btnYes: "Yes! I will love to!", btnNo: "No",
+        scoreboard: "Scoreboard", escapes: "No button escapes", rejectScore: "Reject your Reject",
+        rejectLog: "Reject messages", logPlaceholder: "Messages appear here when you chase No…",
+        badgeActivities: "Plan your trip", titleActivities: "What do you want to do in Macau?",
+        subtitleActivities: "Select as many activities as you like — tap each card to add or remove.",
+        activity0: "0 activities selected", activity1: "1 activity selected",
+        btnActivities: "Continue to pick a date",
+        badgeDate: "Almost there", titleDate: "Pick your date",
+        subtitleDate: "Choose your visit date, then click Send invitation.",
+        labelDate: "Date (YYYY/DD/MM)", selected: "Selected", btnSend: "Send invitation",
+        titleDone: "Invitation sent!",
+        subtitleDone: "Check your inbox and <strong>spam folder</strong> for the invitation from houhonuhh@gmail.com.",
+        registered: "Registered", alertActivity: "Please pick at least one activity!",
+        alertDate: "Please pick a date first.",
+        noMessages: [
+          "Are you sure?", "Maybe think again lah?", "Wah, you serious ah?",
+          "Jialat — why say no?", "Aiya, Macau very shiok one!",
+          "Don't play play lah — say Yes!", "Confirm plus chop want to reject?",
+          "Cannot lah, must go one!", "You siao ah, say no for what?",
+          "Shiok trip leh, just say Yes can already!",
+          "Alamak, the No button running away already!",
+          "Steady pom pi pi — click Yes lah!",
+        ],
+        mockMessages: [
+          "BOOM! You blew up the No button — still not going to Macau meh?",
+          "Nice try lah… but the No button respawned. Say Yes!",
+          "You clicked No and it exploded — your rejection got rejected!",
+          "Alamak! Even the button also cannot tahan your finger.",
+          "Wah piang, you so fierce — but Yes is still the right answer!",
+        ],
+      },
+      "zh-TW": {
+        badgeLanguage: "歡迎", titleLanguage: "選擇語言",
+        subtitleLanguage: "選擇你想閱讀澳門邀請的語言。",
+        badgeEmail: "歡迎", titleEmail: "你收到邀請了",
+        subtitleEmail: "輸入電子郵件以開啟你的澳門邀請。",
+        labelEmail: "你的電子郵件", btnContinue: "繼續", btnBack: "← 返回",
+        badgeInvite: "澳門", inviteQuestion: "你願意接受澳門邀請嗎？",
+        btnYes: "願意！超想去！", btnNo: "不要",
+        scoreboard: "計分板", escapes: "「不要」逃跑次數", rejectScore: "拒絕你的拒絕",
+        rejectLog: "拒絕訊息", logPlaceholder: "追「不要」按鈕時訊息會顯示在這裡…",
+        badgeActivities: "規劃行程", titleActivities: "你想在澳門做什麼？",
+        subtitleActivities: "可複選多項活動 — 點擊卡片加入或取消。",
+        activity0: "已選 0 項活動", activity1: "已選 1 項活動",
+        btnActivities: "繼續選擇日期",
+        badgeDate: "快完成了", titleDate: "選擇日期",
+        subtitleDate: "選好日期後，點擊發送邀請。",
+        labelDate: "日期 (YYYY/DD/MM)", selected: "已選", btnSend: "發送邀請",
+        titleDone: "邀請已發送！",
+        subtitleDone: "請查看收件匣及<strong>垃圾郵件</strong>，邀請來自 houhonuhh@gmail.com。",
+        registered: "已登記", alertActivity: "請至少選擇一項活動！",
+        alertDate: "請先選擇日期。",
+        noMessages: [
+          "確定嗎？", "再想一下啦？", "蛤？你是認真的？",
+          "不要鬧啦 — 澳門超讚的！", "真的不要喔？",
+          "拜託啦，按「願意」！", "再考慮一下好不好？",
+          "不行啦，一定要去！", "你在想什麼啦？",
+          "超讚的行程欸，按願意啦！", "「不要」按鈕都跑走了！",
+          "穩穩的 — 按願意就對了！",
+        ],
+        mockMessages: [
+          "砰！你把「不要」炸掉了 — 還是不去澳門嗎？",
+          "按到了又怎樣，按鈕重生啦！按願意！",
+          "你的拒絕被拒绝了啦！",
+          "哈哈，連按鈕都受不了你！",
+          "厲害喔 — 但願意才是正解啦！",
+        ],
+      },
+      yue: {
+        badgeLanguage: "歡迎", titleLanguage: "揀語言",
+        subtitleLanguage: "揀你想點睇澳門邀請。",
+        badgeEmail: "歡迎", titleEmail: "你有邀請",
+        subtitleEmail: "輸入電郵打開你嘅澳門邀請。",
+        labelEmail: "你嘅電郵", btnContinue: "繼續", btnBack: "← 返回",
+        badgeInvite: "澳門", inviteQuestion: "你接唔接受澳門邀請？",
+        btnYes: "接受！好想去！", btnNo: "唔去",
+        scoreboard: "計分板", escapes: "「唔去」走佬次數", rejectScore: "拒絕你嘅拒絕",
+        rejectLog: "拒絕訊息", logPlaceholder: "追「唔去」掣時訊息會喺呢度…",
+        badgeActivities: "計劃行程", titleActivities: "你想喺澳門做咩？",
+        subtitleActivities: "可以揀多項 — 撳卡片加入或取消。",
+        activity0: "揀咗 0 項", activity1: "揀咗 1 項",
+        btnActivities: "繼續揀日期",
+        badgeDate: "差少少", titleDate: "揀日期",
+        subtitleDate: "揀好日期之後，撳發送邀請。",
+        labelDate: "日期 (YYYY/DD/MM)", selected: "已揀", btnSend: "發送邀請",
+        titleDone: "邀請已發送！",
+        subtitleDone: "查收收件匣同<strong>垃圾郵件</strong>，邀請來自 houhonuhh@gmail.com。",
+        registered: "已登記", alertActivity: "請至少揀一項活動！",
+        alertDate: "請先揀日期。",
+        noMessages: [
+          "真係唔去？", "諗清楚未啊？", "吓？你玩嘅？",
+          "做咩唔去啫？", "澳門好正㗎！", "唔好玩啦 — 撳接受！",
+          "再諗吓啦？", "唔得㗎，一定要去！", "你諗緊咩啊？",
+          "正到爆嘅行程喎！", "「唔去」掣走咗啦！", "穩陣啲 — 撳接受啦！",
+        ],
+        mockMessages: [
+          "嘭！你把「唔去」炸咗 — 都係唔去澳門？",
+          "撳到又點，個掣重生咗！撳接受！",
+          "你嘅拒絕被拒絕咗！", "連個掣都頂唔順你！",
+          "犀利喎 — 但接受先啱！",
+        ],
+      },
+    };
 
+    let lang = localStorage.getItem("macau-lang") || "en-SG";
     let userEmail = "";
     let emailConfig = null;
     let selectedActivities = [];
     let dodgeCount = 0;
+    let mockCount = 0;
     let lastDodgeAt = 0;
     let mouseX = 0;
     let mouseY = 0;
@@ -585,24 +774,28 @@
     let moveCount = 0;
     let touchCount = 0;
     let pointerInsideNo = false;
-    let lastMoveX = 0;
-    let lastMoveY = 0;
+    let escapeBurstActive = false;
+    let stoppedFrames = 0;
     const AVOID_RADIUS = 120;
     const DODGE_COOLDOWN = 700;
     const PAD = 12;
     const FRICTION = 0.82;
     const FLEE_FORCE = 2.8;
-    const MOVE_THRESHOLD = 2.5;
+    const STOP_SPEED = 0.45;
+    const STOP_FRAMES = 14;
 
     const btnNo = document.getElementById("btn-no");
     const moveCountEl = document.getElementById("move-count");
     const touchCountEl = document.getElementById("touch-count");
     const messageLogEl = document.getElementById("message-log");
+    const scorePanel = document.getElementById("score-panel");
+    const explosionLayer = document.getElementById("explosion-layer");
 
     const mainCard = document.getElementById("main-card");
     const activityCountEl = document.getElementById("activity-count");
 
     const steps = {
+      language: document.getElementById("step-language"),
       email: document.getElementById("step-email"),
       invite: document.getElementById("step-invite"),
       activities: document.getElementById("step-activities"),
@@ -610,16 +803,54 @@
       done: document.getElementById("step-done"),
     };
 
+    function t() {
+      return TRANSLATIONS[lang] || TRANSLATIONS["en-SG"];
+    }
+
+    function applyLanguage() {
+      const tr = t();
+      const map = {
+        "badge-language": tr.badgeLanguage, "title-language": tr.titleLanguage,
+        "subtitle-language": tr.subtitleLanguage, "badge-email": tr.badgeEmail,
+        "title-email": tr.titleEmail, "subtitle-email": tr.subtitleEmail,
+        "label-email": tr.labelEmail, "btn-email-continue": tr.btnContinue,
+        "badge-invite": tr.badgeInvite, "title-invite": tr.inviteQuestion,
+        "btn-yes": tr.btnYes, "btn-no": tr.btnNo,
+        "txt-scoreboard": tr.scoreboard, "txt-escapes": tr.escapes,
+        "txt-reject-score": tr.rejectScore, "txt-reject-log-label": tr.rejectLog,
+        "badge-activities": tr.badgeActivities, "title-activities": tr.titleActivities,
+        "subtitle-activities": tr.subtitleActivities,
+        "btn-activities-continue": tr.btnActivities,
+        "badge-date": tr.badgeDate, "title-date": tr.titleDate,
+        "subtitle-date": tr.subtitleDate, "label-date": tr.labelDate,
+        "send-btn": tr.btnSend, "title-done": tr.titleDone,
+      };
+      Object.entries(map).forEach(([id, text]) => {
+        const el = document.getElementById(id);
+        if (el) el.textContent = text;
+      });
+      document.getElementById("subtitle-done").innerHTML = tr.subtitleDone;
+      messageLogEl.placeholder = tr.logPlaceholder;
+      document.querySelectorAll(".btn-back").forEach((b) => { b.textContent = tr.btnBack; });
+      document.querySelectorAll(".lang-btn").forEach((b) => {
+        b.classList.toggle("selected", b.dataset.lang === lang);
+      });
+      updateActivityCount();
+    }
+
     function showStep(name) {
       Object.values(steps).forEach((el) => el.classList.remove("active"));
       steps[name].classList.add("active");
       mainCard.classList.toggle("wide", name === "activities");
+      scorePanel.classList.toggle("visible", name === "invite");
     }
 
     function updateActivityCount() {
+      const tr = t();
       const n = document.querySelectorAll('#activity-list input[name="activity"]:checked').length;
-      activityCountEl.textContent =
-        n === 0 ? "0 activities selected" : n === 1 ? "1 activity selected" : `${n} activities selected`;
+      if (n === 0) activityCountEl.textContent = tr.activity0;
+      else if (n === 1) activityCountEl.textContent = tr.activity1;
+      else activityCountEl.textContent = `${n} ${lang === "en-SG" ? "activities selected" : lang === "zh-TW" ? "項活動已選" : "項已揀"}`;
     }
 
     document.querySelectorAll('#activity-list input[name="activity"]').forEach((cb) => {
@@ -647,12 +878,19 @@
       messageLogEl.scrollTop = messageLogEl.scrollHeight;
     }
 
-    function recordMoveIfNeeded() {
-      if (Math.hypot(btnPosX - lastMoveX, btnPosY - lastMoveY) >= MOVE_THRESHOLD) {
+    function trackEscapeBurst(speed, fleeing) {
+      if (fleeing || speed > STOP_SPEED) {
+        escapeBurstActive = true;
+        stoppedFrames = 0;
+        return;
+      }
+      if (!escapeBurstActive) return;
+      stoppedFrames += 1;
+      if (stoppedFrames >= STOP_FRAMES) {
         moveCount += 1;
         moveCountEl.textContent = String(moveCount);
-        lastMoveX = btnPosX;
-        lastMoveY = btnPosY;
+        escapeBurstActive = false;
+        stoppedFrames = 0;
       }
     }
 
@@ -696,18 +934,89 @@
       btnNo.style.left = btnPosX + "px";
       btnNo.style.top = btnPosY + "px";
       btnNo.style.width = rect.width + "px";
-      lastMoveX = btnPosX;
-      lastMoveY = btnPosY;
+      escapeBurstActive = false;
+      stoppedFrames = 0;
     }
 
     function showDodgeMessage() {
       const now = Date.now();
       if (now - lastDodgeAt < DODGE_COOLDOWN) return;
       lastDodgeAt = now;
-      const msg = NO_MESSAGES[Math.min(dodgeCount, NO_MESSAGES.length - 1)];
+      const msgs = t().noMessages;
+      const msg = msgs[Math.min(dodgeCount, msgs.length - 1)];
       document.getElementById("prompt-message").textContent = msg;
       appendRejectMessage(msg);
       dodgeCount += 1;
+    }
+
+    function getMockMessage() {
+      const msgs = t().mockMessages;
+      const msg = msgs[mockCount % msgs.length];
+      mockCount += 1;
+      return msg;
+    }
+
+    function createExplosion(cx, cy) {
+      const colors = ["#c9a227", "#8b1538", "#ff6b35", "#ffd700", "#e8dfd0"];
+      for (let i = 0; i < 18; i++) {
+        const p = document.createElement("span");
+        p.className = "explosion-burst";
+        const angle = (Math.PI * 2 * i) / 18 + Math.random() * 0.4;
+        const dist = 40 + Math.random() * 70;
+        p.style.left = cx + "px";
+        p.style.top = cy + "px";
+        p.style.background = colors[i % colors.length];
+        p.style.setProperty("--tx", Math.cos(angle) * dist + "px");
+        p.style.setProperty("--ty", Math.sin(angle) * dist + "px");
+        explosionLayer.appendChild(p);
+        setTimeout(() => p.remove(), 600);
+      }
+    }
+
+    function respawnNoButton() {
+      const bw = parseFloat(btnNo.style.width) || 88;
+      const bh = btnNo.offsetHeight || 44;
+      const pos = clampButtonPosition(
+        PAD + Math.random() * (window.innerWidth - bw - PAD * 2),
+        PAD + Math.random() * (window.innerHeight - bh - PAD * 2),
+        bw,
+        bh
+      );
+      btnPosX = pos.left;
+      btnPosY = pos.top;
+      btnVelX = 0;
+      btnVelY = 0;
+      btnNo.style.left = btnPosX + "px";
+      btnNo.style.top = btnPosY + "px";
+      escapeBurstActive = false;
+      stoppedFrames = 0;
+    }
+
+    let lastExplodeAt = 0;
+
+    function explodeNoButton(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      const now = Date.now();
+      if (now - lastExplodeAt < 450) return;
+      if (!btnNo.classList.contains("dodging") || btnNo.classList.contains("exploding")) return;
+      lastExplodeAt = now;
+
+      const rect = btnNo.getBoundingClientRect();
+      createExplosion(rect.left + rect.width / 2, rect.top + rect.height / 2);
+
+      touchCount += 1;
+      touchCountEl.textContent = String(touchCount);
+
+      const msg = getMockMessage();
+      document.getElementById("prompt-message").textContent = msg;
+      appendRejectMessage(msg);
+
+      btnNo.classList.add("exploding");
+      setTimeout(() => {
+        respawnNoButton();
+        btnNo.classList.remove("exploding");
+      }, 520);
     }
 
     function clampButtonPosition(left, top, width, height) {
@@ -731,8 +1040,9 @@
       const dx = cx - mouseX;
       const dy = cy - mouseY;
       const dist = Math.hypot(dx, dy);
+      const fleeing = dist < AVOID_RADIUS && dist > 1;
 
-      if (dist < AVOID_RADIUS && dist > 1) {
+      if (fleeing) {
         const strength = ((AVOID_RADIUS - dist) / AVOID_RADIUS) * FLEE_FORCE;
         btnVelX += (dx / dist) * strength;
         btnVelY += (dy / dist) * strength;
@@ -749,7 +1059,9 @@
       btnPosY = clamped.top;
       btnNo.style.left = btnPosX + "px";
       btnNo.style.top = btnPosY + "px";
-      recordMoveIfNeeded();
+
+      const speed = Math.hypot(btnVelX, btnVelY);
+      trackEscapeBurst(speed, fleeing);
       checkPointerOnNo();
 
       requestAnimationFrame(fleeNoButton);
@@ -814,6 +1126,21 @@
     document.getElementById("user-email").addEventListener("input", updateEmailHint);
     fetchEmailConfig();
 
+    document.querySelectorAll(".lang-btn").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        lang = btn.dataset.lang;
+        localStorage.setItem("macau-lang", lang);
+        applyLanguage();
+        showStep("email");
+      });
+    });
+
+    document.getElementById("back-to-language").addEventListener("click", () => {
+      showStep("language");
+    });
+
+    applyLanguage();
+
     document.getElementById("email-form").addEventListener("submit", (e) => {
       e.preventDefault();
       const input = document.getElementById("user-email");
@@ -831,7 +1158,7 @@
         return;
       }
 
-      document.getElementById("show-email").textContent = `Registered: ${userEmail}`;
+      document.getElementById("show-email").textContent = `${t().registered}: ${userEmail}`;
       document.getElementById("prompt-message").textContent = "";
       resetScores();
       dodgeCount = 0;
@@ -884,7 +1211,7 @@
       }));
 
       if (selectedActivities.length === 0) {
-        alert("Please pick at least one activity!");
+        alert(t().alertActivity);
         return;
       }
 
@@ -894,7 +1221,7 @@
       const sendBtn = document.getElementById("send-btn");
       dateInput.min = today;
       dateInput.value = "";
-      document.getElementById("formatted-date").textContent = "Selected: —";
+      document.getElementById("formatted-date").textContent = t().selected + ": —";
       sendBtn.disabled = true;
       sendingInvitation = false;
       document.getElementById("status").className = "status";
@@ -924,9 +1251,10 @@
     const GUEST_EMAIL_FALLBACK =
       "Add BREVO_API_KEY on Render to email guests (free at brevo.com).";
 
-    btnNo.addEventListener("click", (e) => {
+    btnNo.addEventListener("click", explodeNoButton);
+    btnNo.addEventListener("touchend", (e) => {
       e.preventDefault();
-      showDodgeMessage();
+      explodeNoButton(e);
     });
 
     let sendingInvitation = false;
@@ -979,7 +1307,7 @@
       const isoDate = e.target.value;
       const sendBtn = document.getElementById("send-btn");
       document.getElementById("formatted-date").textContent =
-        "Selected: " + formatDateYyyyDdMm(isoDate);
+        t().selected + ": " + formatDateYyyyDdMm(isoDate);
       sendBtn.disabled = !isoDate;
     });
 
@@ -987,7 +1315,7 @@
       e.preventDefault();
       const isoDate = document.getElementById("visit-date").value;
       if (!isoDate) {
-        alert("Please pick a date first.");
+        alert(t().alertDate);
         return;
       }
       sendInvitation(isoDate);
