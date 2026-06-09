@@ -23,8 +23,8 @@ A simple invitation flow: register email → accept Macau invite → pick activi
 
 Deploy to **[Render](https://render.com)** for a stable URL like `https://macau-invitation.onrender.com`:
 
-1. Push this folder to a **GitHub** repository.
-2. Sign in to [Render](https://dashboard.render.com) → **New** → **Blueprint** → connect your repo.
+1. Code is hosted at [github.com/UUHOUHON/Macau_Invitation](https://github.com/UUHOUHON/Macau_Invitation).
+2. Sign in to [Render](https://dashboard.render.com) → **New** → **Blueprint** → select **Macau_Invitation**.
 3. Render reads `render.yaml` automatically.
 4. When prompted, set **`GMAIL_APP_PASSWORD`** to your 16-character Google App Password.
 5. Click **Apply** — your public URL appears on the service page when deploy finishes.
