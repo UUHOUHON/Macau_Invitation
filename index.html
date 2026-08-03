@@ -58,6 +58,27 @@
 
     .score-panel.visible { display: block; }
 
+    .disappointed-banner {
+      background: linear-gradient(135deg, #3a1520, #6b1f32);
+      color: #ffe6ec;
+      border-radius: 14px;
+      padding: 0.95rem 0.85rem;
+      margin-bottom: 0.85rem;
+      text-align: center;
+      animation: pop 0.45s ease both;
+    }
+
+    .disappointed-banner[hidden] {
+      display: none !important;
+    }
+
+    .disappointed-banner p {
+      font-family: "Fraunces", Georgia, serif;
+      font-size: 1.25rem;
+      font-weight: 700;
+      line-height: 1.25;
+    }
+
     .score-panel h2 {
       font-size: 0.78rem;
       text-transform: uppercase;
@@ -529,6 +550,9 @@
   <div class="app-layout">
     <aside class="score-panel" id="score-panel">
       <h2 id="txt-scoreboard">Scoreboard</h2>
+      <div class="disappointed-banner" id="disappointed-banner" hidden>
+        <p id="disappointed-text">ngo hou disappointed</p>
+      </div>
       <div class="score-box">
         <h3 id="txt-escapes">No button escapes</h3>
         <div class="score-value" id="move-count">0</div>
@@ -730,6 +754,7 @@
         scoreboard: "Scoreboard",
         escapes: "No button escapes",
         rejectScore: "Reject your Reject",
+        disappointed: "ngo hou disappointed",
         rejectLog: "Reject messages",
         logPlaceholder: "Messages appear here when you chase No…",
         eyebrowCuisine: "Menu",
@@ -810,6 +835,7 @@
         scoreboard: "計分板",
         escapes: "「唔去」走佬次數",
         rejectScore: "拒絕你嘅拒絕",
+        disappointed: "我好disappointed",
         rejectLog: "拒絕訊息",
         logPlaceholder: "追「唔去」掣時訊息會喺呢度…",
         eyebrowCuisine: "菜單",
@@ -1045,6 +1071,23 @@
       moveCountEl.textContent = "0";
       touchCountEl.textContent = "0";
       messageLogEl.value = "";
+      const banner = document.getElementById("disappointed-banner");
+      if (banner) banner.hidden = true;
+    }
+
+    function showDisappointed() {
+      const msg = t().disappointed;
+      const banner = document.getElementById("disappointed-banner");
+      const textEl = document.getElementById("disappointed-text");
+      if (textEl) textEl.textContent = msg;
+      if (banner) {
+        banner.hidden = false;
+        banner.style.animation = "none";
+        void banner.offsetWidth;
+        banner.style.animation = "";
+      }
+      document.getElementById("prompt-message").textContent = msg;
+      appendRejectMessage(msg);
     }
 
     function appendRejectMessage(msg) {
@@ -1210,10 +1253,7 @@
       createExplosion(rect.left + rect.width / 2, rect.top + rect.height / 2);
       touchCount += 1;
       touchCountEl.textContent = String(touchCount);
-
-      const msg = getMockMessage();
-      document.getElementById("prompt-message").textContent = msg;
-      appendRejectMessage(msg);
+      showDisappointed();
 
       btnNo.classList.add("exploding");
       setTimeout(() => {
