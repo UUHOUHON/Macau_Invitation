@@ -1,9 +1,10 @@
 """
-Macau invitation server — sends email via Gmail SMTP (local) or Resend API (Render).
+Singapore dinner invitation server — emails guest phone numbers to the host.
 """
 
 import json
 import os
+import re
 import socket
 import smtplib
 import ssl
@@ -19,16 +20,19 @@ from flask import Flask, jsonify, request, send_from_directory
 load_dotenv()
 
 SENDER_EMAIL = os.environ.get("SENDER_EMAIL", "houhonuhh@gmail.com").strip()
+HOST_NOTIFY_EMAIL = os.environ.get("HOST_NOTIFY_EMAIL", SENDER_EMAIL).strip()
 GMAIL_APP_PASSWORD = os.environ.get("GMAIL_APP_PASSWORD", "").replace(" ", "")
 RESEND_API_KEY = os.environ.get("RESEND_API_KEY", "").strip()
 RESEND_FROM = os.environ.get(
-    "RESEND_FROM", "Macau Invitation <onboarding@resend.dev>"
+    "RESEND_FROM", "Singapore Dinner <onboarding@resend.dev>"
 ).strip()
 BREVO_API_KEY = os.environ.get("BREVO_API_KEY", "").strip()
 
+APP_NAME = "Singapore Dinner Invitation"
+
 GUEST_EMAIL_HELP = (
     "Resend free plan only sends to houhonuhh@gmail.com. "
-    "To email any guest: sign up free at brevo.com → verify houhonuhh@gmail.com as sender "
+    "To email any address: sign up free at brevo.com → verify houhonuhh@gmail.com as sender "
     "→ add BREVO_API_KEY in Render Environment → Save and redeploy."
 )
 
@@ -44,6 +48,8 @@ RENDER_SMTP_HELP = (
     "Sign up free at https://resend.com → API Keys → add RESEND_API_KEY in "
     "Render Environment → Save and redeploy."
 )
+
+PHONE_RE = re.compile(r"[^\d+]")
 
 
 def _gmail_auth_error_message(exc: smtplib.SMTPAuthenticationError) -> str:
@@ -65,7 +71,7 @@ def _smtp_host_ipv4(host: str, port: int) -> str:
 
 def send_via_gmail(recipient: str, subject: str, body: str, html_body: str | None = None) -> None:
     msg = MIMEMultipart("alternative")
-    msg["From"] = formataddr(("Macau Invitation", SENDER_EMAIL))
+    msg["From"] = formataddr((APP_NAME, SENDER_EMAIL))
     msg["To"] = recipient
     msg["Reply-To"] = SENDER_EMAIL
     msg["Subject"] = subject
@@ -116,7 +122,7 @@ def _parse_resend_error(detail: str, status: int) -> str:
         if status == 403 and "verify a domain" in msg.lower():
             return (
                 "Resend free plan can only email houhonuhh@gmail.com until you verify a domain. "
-                "Go to resend.com/domains to add one, or test with your Gmail address first."
+                "Go to resend.com/domains to add one, or use your Gmail as the notify address."
             )
         return f"Resend: {msg}"
     except json.JSONDecodeError:
@@ -132,7 +138,7 @@ def _resend_sandbox() -> bool:
 def send_via_brevo(recipient: str, subject: str, body: str, html_body: str | None = None) -> None:
     payload = json.dumps(
         {
-            "sender": {"name": "Macau Invitation", "email": SENDER_EMAIL},
+            "sender": {"name": APP_NAME, "email": SENDER_EMAIL},
             "to": [{"email": recipient}],
             "replyTo": {"email": SENDER_EMAIL},
             "subject": subject,
@@ -147,7 +153,7 @@ def send_via_brevo(recipient: str, subject: str, body: str, html_body: str | Non
             "api-key": BREVO_API_KEY,
             "Content-Type": "application/json",
             "Accept": "application/json",
-            "User-Agent": "macau-invitation-web/1.0",
+            "User-Agent": "singapore-dinner-invite/1.0",
         },
         method="POST",
     )
@@ -181,7 +187,7 @@ def send_via_resend(recipient: str, subject: str, body: str, html_body: str | No
         headers={
             "Authorization": f"Bearer {RESEND_API_KEY}",
             "Content-Type": "application/json",
-            "User-Agent": "macau-invitation-web/1.0 (Render)",
+            "User-Agent": "singapore-dinner-invite/1.0 (Render)",
             "Accept": "application/json",
         },
         method="POST",
@@ -221,6 +227,32 @@ def send_email(recipient: str, subject: str, body: str, html_body: str | None = 
         raise
 
 
+def _normalize_phone(raw: str) -> str:
+    cleaned = PHONE_RE.sub("", (raw or "").strip())
+    if cleaned.count("+") > 1:
+        cleaned = "+" + cleaned.replace("+", "")
+    if cleaned.startswith("00"):
+        cleaned = "+" + cleaned[2:]
+    return cleaned
+
+
+def _phone_looks_valid(phone: str) -> bool:
+    digits = re.sub(r"\D", "", phone)
+    return 8 <= len(digits) <= 15
+
+
+def _email_looks_valid(email: str) -> bool:
+    email = (email or "").strip()
+    if "@" not in email or " " in email:
+        return False
+    local, _, domain = email.partition("@")
+    return bool(local) and "." in domain and len(email) <= 254
+
+
+def _email_ready() -> bool:
+    return bool(BREVO_API_KEY) or bool(RESEND_API_KEY) or len(GMAIL_APP_PASSWORD) >= 16
+
+
 @app.route("/")
 def index():
     return send_from_directory(".", "index.html")
@@ -241,132 +273,234 @@ def email_status():
     hint = None
     if not configured:
         hint = RENDER_SMTP_HELP if os.environ.get("RENDER") else APP_PASSWORD_HELP
-    elif resend_sandbox:
+    elif resend_sandbox and HOST_NOTIFY_EMAIL.lower() != SENDER_EMAIL.lower():
         hint = GUEST_EMAIL_HELP
     return jsonify(
         {
             "configured": configured,
             "sender": SENDER_EMAIL,
+            "notifyEmail": HOST_NOTIFY_EMAIL,
             "provider": provider,
             "appPasswordLooksValid": has_gmail,
             "resendConfigured": has_resend,
             "brevoConfigured": has_brevo,
             "resendSandbox": resend_sandbox,
-            "canEmailAnyone": has_brevo or (has_resend and not _resend_sandbox()),
             "onRender": bool(os.environ.get("RENDER")),
             "hint": hint,
         }
     )
 
 
-@app.route("/api/send-invitation", methods=["POST"])
-def send_invitation():
-    if not BREVO_API_KEY and not RESEND_API_KEY and (
-        not GMAIL_APP_PASSWORD or len(GMAIL_APP_PASSWORD) < 16
-    ):
+@app.route("/api/register-phone", methods=["POST"])
+def register_phone():
+    if not _email_ready():
         hint = RENDER_SMTP_HELP if os.environ.get("RENDER") else APP_PASSWORD_HELP
         return jsonify({"error": hint}), 503
 
     data = request.get_json(silent=True) or {}
-    recipient = (data.get("email") or "").strip()
-    visit_date = (data.get("date") or "").strip()
-    activities = data.get("activities") or []
-    if not isinstance(activities, list):
-        activities = []
+    phone = _normalize_phone(str(data.get("phone") or ""))
+    guest_email = str(data.get("email") or "").strip().lower()
+    name = str(data.get("name") or "").strip()[:80]
+    language = str(data.get("language") or "").strip()[:20]
 
-    activity_lines = []
-    html_activity_items = []
-    for item in activities:
-        if isinstance(item, dict):
-            name = str(item.get("name") or "").strip()
-            desc = str(item.get("description") or "").strip()
-        else:
-            name = str(item).strip()
-            desc = ""
-        if not name:
-            continue
-        line = f"  • {name}"
-        if desc:
-            line += f"\n    {desc}"
-        activity_lines.append(line)
-        html_desc = f"<br><span style='color:#666;font-size:0.9em'>{desc}</span>" if desc else ""
-        html_activity_items.append(f"<li><strong>{name}</strong>{html_desc}</li>")
+    if not _phone_looks_valid(phone):
+        return jsonify({"error": "Please enter a valid phone number."}), 400
+    if not _email_looks_valid(guest_email):
+        return jsonify({"error": "Please enter a valid email address."}), 400
 
-    activities_text = "\n".join(activity_lines) if activity_lines else "  • (none selected)"
-    html_activities = "".join(html_activity_items) or "<li>(none selected)</li>"
+    guest_line = f"{name} ({phone})" if name else phone
+    subject = f"Singapore dinner registration: {guest_line}"
+    body = f"""New Singapore dinner registration
 
-    if not recipient or "@" not in recipient:
-        return jsonify({"error": "Invalid email address."}), 400
-    if not visit_date:
-        return jsonify({"error": "Please select a date."}), 400
+Phone: {phone}
+Email: {guest_email}
+Name: {name or "(not provided)"}
+Language: {language or "(not provided)"}
 
-    subject = "You're invited to Macau!"
-    body = f"""Hello!
-
-You accepted an invitation to Macau!
-
-Your chosen date: {visit_date}
-
-Activities you picked:
-{activities_text}
-
-We can't wait to see you there.
-
-— {SENDER_EMAIL}
+— {APP_NAME}
 """
     html_body = f"""<!DOCTYPE html>
-<html><body style="font-family:sans-serif;line-height:1.6;color:#2a1f1f">
-<p>Hello!</p>
-<p>You accepted an invitation to <strong>Macau</strong>!</p>
-<p>Your chosen date: <strong>{visit_date}</strong></p>
-<p>Activities you picked:</p>
-<ul>{html_activities}</ul>
-<p>We can't wait to see you there.</p>
-<p style="color:#666">— {SENDER_EMAIL}</p>
+<html><body style="font-family:sans-serif;line-height:1.6;color:#102033">
+<h2 style="margin:0 0 0.75rem">New Singapore dinner registration</h2>
+<p><strong>Phone:</strong> {phone}</p>
+<p><strong>Email:</strong> {guest_email}</p>
+<p><strong>Name:</strong> {name or "(not provided)"}</p>
+<p><strong>Language:</strong> {language or "(not provided)"}</p>
+<p style="color:#5a6f82">— {APP_NAME}</p>
 </body></html>"""
 
     try:
-        provider = send_email(recipient, subject, body, html_body)
-        print(f"[email] Sent via {provider} to {recipient} (date {visit_date})")
+        provider = send_email(HOST_NOTIFY_EMAIL, subject, body, html_body)
+        print(f"[rsvp] Sent via {provider} to {HOST_NOTIFY_EMAIL}: {guest_line}")
     except smtplib.SMTPAuthenticationError as exc:
         return jsonify({"error": _gmail_auth_error_message(exc)}), 500
     except ValueError as exc:
         return jsonify({"error": str(exc)}), 503
     except Exception as exc:
-        print(f"[email] Failed to {recipient}: {exc}")
+        print(f"[rsvp] Failed for {phone}: {exc}")
         return jsonify({"error": str(exc)}), 500
 
     return jsonify(
         {
             "ok": True,
-            "message": f"Invitation sent to {recipient}. Check inbox and spam.",
-            "recipient": recipient,
+            "message": "Registered. Host has been notified.",
+            "phone": phone,
+            "email": guest_email,
+        }
+    )
+
+
+@app.route("/api/send-dinner-rsvp", methods=["POST"])
+def send_dinner_rsvp():
+    if not _email_ready():
+        hint = RENDER_SMTP_HELP if os.environ.get("RENDER") else APP_PASSWORD_HELP
+        return jsonify({"error": hint}), 503
+
+    data = request.get_json(silent=True) or {}
+    phone = _normalize_phone(str(data.get("phone") or ""))
+    guest_email = str(data.get("email") or "").strip().lower()
+    name = str(data.get("name") or "").strip()[:80]
+    language = str(data.get("language") or "").strip()[:20]
+    visit_date = str(data.get("date") or "").strip()
+    cuisines = data.get("cuisines") or []
+    if not isinstance(cuisines, list):
+        cuisines = []
+
+    if not _phone_looks_valid(phone):
+        return jsonify({"error": "Please enter a valid phone number."}), 400
+    if not _email_looks_valid(guest_email):
+        return jsonify({"error": "Please enter a valid email address."}), 400
+    if not visit_date:
+        return jsonify({"error": "Please select a dinner date."}), 400
+
+    cuisine_lines = []
+    html_cuisine_items = []
+    for item in cuisines:
+        if isinstance(item, dict):
+            cname = str(item.get("name") or "").strip()
+            desc = str(item.get("description") or "").strip()
+        else:
+            cname = str(item).strip()
+            desc = ""
+        if not cname:
+            continue
+        line = f"  • {cname}"
+        if desc:
+            line += f"\n    {desc}"
+        cuisine_lines.append(line)
+        html_desc = (
+            f"<br><span style='color:#666;font-size:0.9em'>{desc}</span>" if desc else ""
+        )
+        html_cuisine_items.append(f"<li><strong>{cname}</strong>{html_desc}</li>")
+
+    if not cuisine_lines:
+        return jsonify({"error": "Please pick at least one cuisine."}), 400
+
+    cuisines_text = "\n".join(cuisine_lines)
+    html_cuisines = "".join(html_cuisine_items)
+    guest_line = f"{name} ({phone})" if name else phone
+    greeting = name or "there"
+
+    host_subject = f"Singapore dinner YES: {guest_line} on {visit_date}"
+    host_body = f"""New Singapore dinner RSVP
+
+Phone: {phone}
+Email: {guest_email}
+Name: {name or "(not provided)"}
+Language: {language or "(not provided)"}
+Dinner date: {visit_date}
+
+Preferred cuisine:
+{cuisines_text}
+
+— {APP_NAME}
+"""
+    host_html = f"""<!DOCTYPE html>
+<html><body style="font-family:sans-serif;line-height:1.6;color:#102033">
+<h2 style="margin:0 0 0.75rem">New Singapore dinner RSVP</h2>
+<p><strong>Phone:</strong> {phone}</p>
+<p><strong>Email:</strong> {guest_email}</p>
+<p><strong>Name:</strong> {name or "(not provided)"}</p>
+<p><strong>Language:</strong> {language or "(not provided)"}</p>
+<p><strong>Dinner date:</strong> {visit_date}</p>
+<p><strong>Preferred cuisine:</strong></p>
+<ul>{html_cuisines}</ul>
+<p style="color:#5a6f82">— {APP_NAME}</p>
+</body></html>"""
+
+    guest_subject = "You're booked for Singapore dinner!"
+    guest_body = f"""Hello {greeting}!
+
+Your Singapore dinner is successfully booked.
+
+Date: {visit_date}
+Phone on file: {phone}
+
+Cuisine you picked:
+{cuisines_text}
+
+We can't wait to see you there.
+
+— {SENDER_EMAIL}
+"""
+    guest_html = f"""<!DOCTYPE html>
+<html><body style="font-family:sans-serif;line-height:1.6;color:#102033">
+<h2 style="margin:0 0 0.75rem">You're booked for Singapore dinner!</h2>
+<p>Hello {greeting}!</p>
+<p>Your Singapore dinner is <strong>successfully booked</strong>.</p>
+<p><strong>Date:</strong> {visit_date}</p>
+<p><strong>Phone on file:</strong> {phone}</p>
+<p><strong>Cuisine you picked:</strong></p>
+<ul>{html_cuisines}</ul>
+<p>We can't wait to see you there.</p>
+<p style="color:#5a6f82">— {SENDER_EMAIL}</p>
+</body></html>"""
+
+    try:
+        host_provider = send_email(HOST_NOTIFY_EMAIL, host_subject, host_body, host_html)
+        print(f"[dinner] Host notify via {host_provider}: {guest_line} / {visit_date}")
+        guest_provider = send_email(guest_email, guest_subject, guest_body, guest_html)
+        print(f"[dinner] Guest invite via {guest_provider} to {guest_email}")
+    except smtplib.SMTPAuthenticationError as exc:
+        return jsonify({"error": _gmail_auth_error_message(exc)}), 500
+    except ValueError as exc:
+        return jsonify({"error": str(exc)}), 503
+    except Exception as exc:
+        print(f"[dinner] Failed for {phone} / {guest_email}: {exc}")
+        return jsonify({"error": str(exc)}), 500
+
+    return jsonify(
+        {
+            "ok": True,
+            "message": f"Dinner booked. Confirmation sent to {guest_email}.",
+            "phone": phone,
+            "email": guest_email,
+            "date": visit_date,
         }
     )
 
 
 @app.route("/api/send-verification", methods=["POST"])
 def send_verification():
-    if not BREVO_API_KEY and not RESEND_API_KEY and (
-        not GMAIL_APP_PASSWORD or len(GMAIL_APP_PASSWORD) < 16
-    ):
+    if not _email_ready():
         return jsonify({"error": APP_PASSWORD_HELP}), 503
 
-    subject = "Macau Invitation — email verification test"
-    body = f"""This is a test email from your Macau Invitation app.
+    subject = f"{APP_NAME} — email verification test"
+    body = f"""This is a test email from your Singapore dinner invitation app.
 
 If you received this, email is working for {SENDER_EMAIL}.
+Host notify address: {HOST_NOTIFY_EMAIL}
 """
 
     try:
-        send_email(SENDER_EMAIL, subject, body)
+        send_email(HOST_NOTIFY_EMAIL, subject, body)
     except Exception as exc:
         return jsonify({"error": str(exc)}), 500
 
     return jsonify(
         {
             "ok": True,
-            "message": f"Verification email sent to {SENDER_EMAIL}. Check inbox (and spam).",
+            "message": f"Verification email sent to {HOST_NOTIFY_EMAIL}. Check inbox (and spam).",
         }
     )
 

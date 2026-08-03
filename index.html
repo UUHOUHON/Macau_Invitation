@@ -3,36 +3,37 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Macau Invitation</title>
+  <title>Singapore Dinner Invitation</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700&family=Sora:wght@400;500;600&display=swap" rel="stylesheet" />
   <style>
     :root {
-      --gold: #c9a227;
-      --gold-light: #f4e4a6;
-      --red: #8b1538;
-      --red-dark: #5c0e26;
-      --cream: #faf6ef;
-      --text: #2a1f1f;
-      --shadow: 0 12px 40px rgba(92, 14, 38, 0.18);
+      --ink: #0c1b2a;
+      --ink-soft: #16324a;
+      --amber: #e8a838;
+      --amber-soft: #f3d29a;
+      --mint: #7ec8b8;
+      --fog: #e8f0f4;
+      --text: #102033;
+      --muted: #5a6f82;
+      --shadow: 0 18px 50px rgba(12, 27, 42, 0.35);
     }
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
-      font-family: "DM Sans", system-ui, sans-serif;
+      font-family: "Sora", system-ui, sans-serif;
       min-height: 100vh;
       display: flex;
-      align-items: center;
+      align-items: flex-start;
       justify-content: center;
-      padding: 1rem;
-      background: linear-gradient(145deg, var(--red-dark) 0%, var(--red) 45%, #a61e3f 100%);
+      padding: 1.25rem;
       color: var(--text);
+      background:
+        radial-gradient(ellipse 80% 60% at 15% 10%, rgba(232, 168, 56, 0.28), transparent 55%),
+        radial-gradient(ellipse 70% 50% at 90% 85%, rgba(126, 200, 184, 0.22), transparent 50%),
+        linear-gradient(160deg, #07131f 0%, var(--ink) 45%, var(--ink-soft) 100%);
     }
 
     .app-layout {
@@ -42,55 +43,391 @@
       gap: 1rem;
       width: 100%;
       max-width: 920px;
+      margin-top: 1vh;
     }
 
     .score-panel {
       width: 240px;
       flex-shrink: 0;
-      background: var(--cream);
-      border-radius: 16px;
+      background: linear-gradient(180deg, rgba(248, 252, 255, 0.98), rgba(232, 240, 244, 0.96));
+      border-radius: 20px;
       padding: 1.1rem;
       box-shadow: var(--shadow);
       display: none;
     }
 
-    .score-panel.visible {
-      display: block;
+    .score-panel.visible { display: block; }
+
+    .score-panel h2 {
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #9a6a12;
+      margin-bottom: 0.75rem;
     }
 
-    .lang-options {
-      display: flex;
-      flex-direction: column;
-      gap: 0.65rem;
-      margin-bottom: 0.5rem;
+    .score-box {
+      background: #fff;
+      border: 1.5px solid rgba(16, 32, 51, 0.1);
+      border-radius: 12px;
+      padding: 0.75rem;
+      margin-bottom: 0.75rem;
+      text-align: center;
     }
+
+    .score-box h3 {
+      font-size: 0.78rem;
+      color: var(--muted);
+      margin-bottom: 0.35rem;
+      font-weight: 500;
+    }
+
+    .score-value {
+      font-family: "Fraunces", Georgia, serif;
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--ink);
+      line-height: 1;
+    }
+
+    .score-panel label {
+      display: block;
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--ink-soft);
+      margin-bottom: 0.4rem;
+    }
+
+    #message-log {
+      width: 100%;
+      min-height: 140px;
+      max-height: 220px;
+      resize: vertical;
+      border: 1.5px solid rgba(16, 32, 51, 0.12);
+      border-radius: 10px;
+      padding: 0.6rem;
+      font-size: 0.78rem;
+      font-family: inherit;
+      line-height: 1.4;
+      background: #fff;
+      color: var(--text);
+    }
+
+    .shell {
+      width: 100%;
+      max-width: 440px;
+      position: relative;
+      flex: 1;
+    }
+
+    .shell.wide { max-width: 520px; }
+
+    .shell::before {
+      content: "";
+      position: absolute;
+      inset: -1px;
+      border-radius: 28px;
+      background: linear-gradient(135deg, rgba(232, 168, 56, 0.45), transparent 40%, rgba(126, 200, 184, 0.35));
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    .card {
+      position: relative;
+      z-index: 1;
+      background: linear-gradient(180deg, rgba(248, 252, 255, 0.98), rgba(232, 240, 244, 0.96));
+      border-radius: 27px;
+      padding: 2rem 1.75rem 1.75rem;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .brand {
+      font-family: "Fraunces", Georgia, serif;
+      font-size: clamp(1.7rem, 4.5vw, 2.2rem);
+      font-weight: 700;
+      line-height: 1.15;
+      letter-spacing: -0.02em;
+      color: var(--ink);
+      margin-bottom: 0.35rem;
+    }
+
+    .eyebrow {
+      display: inline-block;
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #9a6a12;
+      margin-bottom: 0.85rem;
+    }
+
+    .subtitle {
+      color: var(--muted);
+      font-size: 0.95rem;
+      line-height: 1.55;
+      margin-bottom: 1.5rem;
+    }
+
+    .step { display: none; }
+    .step.active { display: block; animation: rise 0.45s ease both; }
+
+    @keyframes rise {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .lang-options { display: grid; gap: 0.65rem; }
 
     .lang-btn {
       text-align: left;
-      padding: 1rem 1.1rem;
-      border: 2px solid #e8dfd0;
+      border: 1.5px solid rgba(16, 32, 51, 0.12);
+      background: rgba(255, 255, 255, 0.7);
       border-radius: 14px;
-      background: #fff;
+      padding: 0.95rem 1rem;
       cursor: pointer;
-      transition: border-color 0.2s, background 0.2s;
+      transition: border-color 0.2s, transform 0.2s, background 0.2s;
+      font-family: inherit;
     }
 
     .lang-btn:hover,
     .lang-btn.selected {
-      border-color: var(--red);
-      background: #fff8f6;
+      border-color: var(--amber);
+      background: #fff;
+      transform: translateY(-1px);
     }
 
     .lang-btn strong {
       display: block;
-      color: var(--red-dark);
-      font-size: 1rem;
-      margin-bottom: 0.2rem;
+      font-size: 0.98rem;
+      color: var(--ink);
+      margin-bottom: 0.15rem;
     }
 
-    .lang-btn span {
+    .lang-btn span { font-size: 0.8rem; color: var(--muted); }
+
+    label {
+      display: block;
       font-size: 0.82rem;
-      color: #5c4a4a;
+      font-weight: 600;
+      color: var(--ink-soft);
+      margin-bottom: 0.4rem;
+    }
+
+    input[type="text"],
+    input[type="tel"],
+    input[type="email"],
+    input[type="date"] {
+      width: 100%;
+      border: 1.5px solid rgba(16, 32, 51, 0.14);
+      border-radius: 12px;
+      padding: 0.9rem 1rem;
+      font-size: 1rem;
+      font-family: inherit;
+      background: #fff;
+      color: var(--text);
+      margin-bottom: 1rem;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    input:focus {
+      border-color: var(--amber);
+      box-shadow: 0 0 0 3px rgba(232, 168, 56, 0.2);
+    }
+
+    .btn {
+      width: 100%;
+      border: none;
+      border-radius: 12px;
+      padding: 0.95rem 1.1rem;
+      font-size: 1rem;
+      font-weight: 600;
+      font-family: inherit;
+      cursor: pointer;
+      transition: transform 0.15s, filter 0.15s, opacity 0.15s;
+    }
+
+    .btn:hover { transform: translateY(-1px); filter: brightness(1.03); }
+    .btn:disabled { opacity: 0.65; cursor: wait; transform: none; }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #d9921f, var(--amber));
+      color: #1a1205;
+    }
+
+    .btn-no {
+      background: #d9e3ea;
+      color: #4a5d6e;
+      min-height: 48px;
+      -webkit-tap-highlight-color: transparent;
+      touch-action: none;
+    }
+
+    .btn-no.dodging {
+      position: fixed;
+      z-index: 10001;
+      width: auto;
+      min-width: 5.5rem;
+      min-height: 48px;
+      margin: 0;
+      box-shadow: 0 8px 24px rgba(12, 27, 42, 0.28);
+      touch-action: none;
+    }
+
+    .btn-no.exploding { visibility: hidden; }
+
+    .btn-yes {
+      background: linear-gradient(135deg, #1f8a66, #2db88a);
+      color: #fff;
+      margin-bottom: 0.75rem;
+      min-height: 48px;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body.invite-lock {
+      overflow: hidden;
+      overscroll-behavior: none;
+      touch-action: none;
+    }
+
+    #step-invite.active {
+      touch-action: none;
+      user-select: none;
+    }
+
+    .btn-back {
+      width: auto;
+      background: transparent;
+      color: var(--muted);
+      padding: 0;
+      margin-bottom: 1rem;
+      font-size: 0.85rem;
+      font-weight: 500;
+    }
+
+    .btn-back:hover { filter: none; color: var(--ink); }
+
+    .prompt-message {
+      min-height: 1.4em;
+      margin-bottom: 1rem;
+      font-size: 0.92rem;
+      color: #9a6a12;
+      font-weight: 500;
+    }
+
+    #step-invite { position: relative; min-height: 220px; }
+
+    .cuisine-count {
+      font-size: 0.85rem;
+      color: var(--muted);
+      margin-bottom: 0.85rem;
+    }
+
+    .cuisine-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.65rem;
+      margin-bottom: 1rem;
+      max-height: 360px;
+      overflow-y: auto;
+      padding-right: 0.2rem;
+    }
+
+    .cuisine-card {
+      display: grid;
+      grid-template-columns: 2.75rem 1fr auto;
+      gap: 0.7rem;
+      align-items: center;
+      padding: 0.7rem;
+      border: 1.5px solid rgba(16, 32, 51, 0.12);
+      border-radius: 14px;
+      cursor: pointer;
+      background: #fff;
+      transition: border-color 0.2s, background 0.2s, box-shadow 0.2s;
+      user-select: none;
+    }
+
+    .cuisine-card:hover {
+      border-color: var(--amber);
+      box-shadow: 0 4px 14px rgba(12, 27, 42, 0.08);
+    }
+
+    .cuisine-card:has(input:checked) {
+      border-color: #1f8a66;
+      background: #f0faf6;
+    }
+
+    .cuisine-card input {
+      width: 1.05rem;
+      height: 1.05rem;
+      accent-color: #1f8a66;
+      cursor: pointer;
+    }
+
+    .cuisine-icon {
+      width: 2.75rem;
+      height: 2.75rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.35rem;
+      border-radius: 10px;
+      background: linear-gradient(145deg, var(--amber-soft), #fff8e7);
+    }
+
+    .cuisine-body strong {
+      display: block;
+      font-size: 0.9rem;
+      color: var(--ink);
+      margin-bottom: 0.15rem;
+    }
+
+    .cuisine-body span {
+      font-size: 0.78rem;
+      color: var(--muted);
+      line-height: 1.35;
+    }
+
+    .date-preview {
+      font-size: 0.88rem;
+      color: var(--ink-soft);
+      margin: -0.35rem 0 1rem;
+      font-weight: 500;
+    }
+
+    .status {
+      margin-top: 1rem;
+      padding: 0.75rem 0.85rem;
+      border-radius: 10px;
+      font-size: 0.88rem;
+      display: none;
+      line-height: 1.4;
+    }
+
+    .status.show { display: block; }
+    .status.success { background: #dff5ef; color: #1d5c4d; white-space: pre-line; }
+    .status.error { background: #fde8e8; color: #8a2a2a; }
+    .status.loading { background: #fff4df; color: #7a550f; }
+
+    .done-mark {
+      font-family: "Fraunces", Georgia, serif;
+      font-size: 2.5rem;
+      color: var(--mint);
+      margin-bottom: 0.4rem;
+      animation: pop 0.5s ease both;
+    }
+
+    @keyframes pop {
+      from { opacity: 0; transform: scale(0.7); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    .phone-hint {
+      font-size: 0.78rem;
+      color: var(--muted);
+      margin-top: -0.55rem;
+      margin-bottom: 1rem;
     }
 
     #explosion-layer {
@@ -115,577 +452,254 @@
       100% { opacity: 0; transform: translate(var(--tx), var(--ty)) scale(0.2); }
     }
 
-    .btn-no.exploding {
-      visibility: hidden;
-    }
-
-    .score-panel h2 {
-      font-size: 0.8rem;
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-      color: var(--red);
-      margin-bottom: 0.75rem;
-    }
-
-    .score-box {
-      background: #fffdf8;
-      border: 2px solid #e8dfd0;
-      border-radius: 12px;
-      padding: 0.75rem;
-      margin-bottom: 0.75rem;
-      text-align: center;
-    }
-
-    .score-box h3 {
-      font-size: 0.8rem;
-      color: #5c4a4a;
-      margin-bottom: 0.35rem;
-    }
-
-    .score-value {
-      font-size: 2rem;
-      font-weight: 700;
-      color: var(--red-dark);
-      line-height: 1;
-    }
-
-    .score-panel label {
-      font-size: 0.8rem;
-      margin-bottom: 0.4rem;
-    }
-
-    #message-log {
-      width: 100%;
-      min-height: 140px;
-      max-height: 220px;
-      resize: vertical;
-      border: 2px solid #e8dfd0;
-      border-radius: 10px;
-      padding: 0.6rem;
-      font-size: 0.78rem;
-      font-family: inherit;
-      line-height: 1.4;
-      background: #fff;
-      color: var(--text);
-    }
-
-    .card {
-      width: 100%;
-      max-width: 420px;
-      flex: 1;
-      background: var(--cream);
-      border-radius: 20px;
-      padding: 2rem 1.75rem;
-      box-shadow: var(--shadow);
-      text-align: center;
-      animation: fadeIn 0.5s ease;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(12px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    .badge {
-      display: inline-block;
-      font-size: 0.75rem;
-      font-weight: 600;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: var(--red);
-      background: var(--gold-light);
-      padding: 0.35rem 0.75rem;
-      border-radius: 999px;
-      margin-bottom: 1rem;
-    }
-
-    h1 {
-      font-size: 1.5rem;
-      font-weight: 700;
-      line-height: 1.35;
-      margin-bottom: 0.5rem;
-      color: var(--red-dark);
-    }
-
-    .subtitle {
-      font-size: 0.95rem;
-      color: #5c4a4a;
-      margin-bottom: 1.5rem;
-      line-height: 1.5;
-    }
-
-    .step { display: none; }
-    .step.active { display: block; }
-
-    label {
-      display: block;
-      text-align: left;
-      font-size: 0.85rem;
-      font-weight: 600;
-      margin-bottom: 0.4rem;
-      color: var(--red-dark);
-    }
-
-    input[type="email"],
-    input[type="date"] {
-      width: 100%;
-      padding: 0.85rem 1rem;
-      border: 2px solid #e8dfd0;
-      border-radius: 12px;
-      font-size: 1rem;
-      font-family: inherit;
-      margin-bottom: 1rem;
-      transition: border-color 0.2s;
-    }
-
-    input:focus {
-      outline: none;
-      border-color: var(--gold);
-    }
-
-    .btn {
-      display: inline-block;
-      width: 100%;
-      padding: 0.9rem 1.25rem;
-      border: none;
-      border-radius: 12px;
-      font-size: 1rem;
-      font-weight: 600;
-      font-family: inherit;
-      cursor: pointer;
-      transition: transform 0.15s, box-shadow 0.15s, background 0.15s;
-    }
-
-    .btn-primary {
-      background: linear-gradient(135deg, var(--gold) 0%, #e8c547 100%);
-      color: var(--red-dark);
-      box-shadow: 0 4px 14px rgba(201, 162, 39, 0.45);
-    }
-
-    .btn-primary:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 18px rgba(201, 162, 39, 0.5);
-    }
-
-    .btn-yes {
-      background: linear-gradient(135deg, #2d8a5e 0%, #3cb371 100%);
-      color: white;
-      margin-bottom: 0.75rem;
-      transition: transform 0.2s, font-size 0.2s, padding 0.2s, box-shadow 0.2s;
-    }
-
-    .btn-yes:hover {
-      transform: translateY(-2px);
-    }
-
-    .btn-no {
-      background: #e8dfd0;
-      color: #6b5b5b;
-    }
-
-    .btn-back {
-      width: auto;
-      display: inline-flex;
-      align-items: center;
-      gap: 0.35rem;
-      padding: 0.45rem 0.85rem;
-      margin-bottom: 1rem;
-      background: transparent;
-      color: #7a6565;
-      border: 2px solid #e8dfd0;
-      font-size: 0.88rem;
-      font-weight: 600;
-      box-shadow: none;
-    }
-
-    .btn-back:hover {
-      transform: none;
-      border-color: var(--gold);
-      color: var(--red-dark);
-      background: #fffdf8;
-    }
-
-    .btn-send:disabled {
-      opacity: 0.55;
-      cursor: not-allowed;
-      transform: none;
-    }
-
-    .card.wide {
-      max-width: 520px;
-    }
-
-    .activity-list {
-      display: flex;
-      flex-direction: column;
-      gap: 0.75rem;
-      margin-bottom: 1rem;
-      text-align: left;
-      max-height: 420px;
-      overflow-y: auto;
-      padding-right: 0.25rem;
-    }
-
-    .activity-card {
-      display: grid;
-      grid-template-columns: 3rem 1fr auto;
-      gap: 0.75rem;
-      align-items: center;
-      padding: 0.65rem;
-      border: 2px solid #e8dfd0;
-      border-radius: 14px;
-      cursor: pointer;
-      transition: border-color 0.2s, background 0.2s, box-shadow 0.2s;
-      user-select: none;
-      background: #fff;
-    }
-
-    .activity-card:hover {
-      border-color: var(--gold);
-      box-shadow: 0 4px 12px rgba(92, 14, 38, 0.08);
-    }
-
-    .activity-card:has(input:checked) {
-      border-color: var(--red);
-      background: #fff8f6;
-      box-shadow: 0 4px 14px rgba(139, 21, 56, 0.12);
-    }
-
-    .activity-card input {
-      width: 1.1rem;
-      height: 1.1rem;
-      accent-color: var(--red);
-      cursor: pointer;
-      flex-shrink: 0;
-    }
-
-    .activity-icon {
-      width: 3rem;
-      height: 3rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.65rem;
-      border-radius: 10px;
-      background: linear-gradient(145deg, var(--gold-light), #fff8e7);
-      flex-shrink: 0;
-    }
-
-    .activity-body strong {
-      display: block;
-      font-size: 0.92rem;
-      color: var(--red-dark);
-      margin-bottom: 0.25rem;
-    }
-
-    .activity-body p {
-      font-size: 0.78rem;
-      line-height: 1.4;
-      color: #5c4a4a;
-      font-weight: 400;
-    }
-
-    .activity-count {
-      font-size: 0.85rem;
-      color: var(--red);
-      font-weight: 600;
-      margin-bottom: 0.75rem;
-      min-height: 1.25rem;
-    }
-
-    .btn-no.dodging {
-      position: fixed;
-      width: auto;
-      min-width: 5.5rem;
-      max-width: 8rem;
-      z-index: 10001;
-      transition: left 0.08s linear, top 0.08s linear;
-      will-change: left, top;
-    }
-
-    .prompt-message {
-      font-size: 1.1rem;
-      font-weight: 600;
-      color: var(--red);
-      min-height: 2.5rem;
-      margin: 1rem 0 1.25rem;
-      line-height: 1.4;
-    }
-
-    .registered-email {
-      font-size: 0.8rem;
-      color: #7a6565;
-      margin-bottom: 1rem;
-      word-break: break-all;
-    }
-
-    .date-hint {
-      font-size: 0.8rem;
-      color: #7a6565;
-      margin-top: -0.5rem;
-      margin-bottom: 1rem;
-    }
-
-    .status {
-      margin-top: 1rem;
-      padding: 0.75rem;
-      border-radius: 10px;
-      font-size: 0.9rem;
-      display: none;
-    }
-
-    .status.show { display: block; }
-    .status.success { background: #d4edda; color: #155724; }
-    .status.error { background: #f8d7da; color: #721c24; }
-    .status.loading { background: #fff3cd; color: #856404; }
-
-    .confetti {
-      font-size: 2rem;
-      margin-bottom: 0.5rem;
-    }
-
-    #step-invite {
-      position: relative;
-      min-height: 220px;
-    }
-
-    @media (max-width: 800px) {
-      body {
-        align-items: flex-start;
-        padding: 0.75rem;
-      }
-
-      .app-layout {
-        flex-direction: column;
-        gap: 0.75rem;
-      }
-
+    @media (max-width: 760px) {
+      .app-layout { flex-direction: column; align-items: center; }
       .score-panel {
         width: 100%;
+        max-width: 440px;
         order: 2;
       }
-
-      .card {
-        order: 1;
-        max-width: 100%;
-      }
-
-      #message-log {
-        min-height: 100px;
-      }
-
-      .activity-list {
-        max-height: none;
-      }
-
-      .activity-card {
-        grid-template-columns: 2.75rem 1fr auto;
-      }
-
-      .activity-icon {
-        width: 2.75rem;
-        height: 2.75rem;
-        font-size: 1.45rem;
-      }
-
-      .btn-no.dodging {
-        min-width: 4.5rem;
-        padding: 1rem 1.1rem;
-        font-size: 1.05rem;
-      }
+      .shell { order: 1; }
     }
   </style>
 </head>
 <body>
-  <div id="explosion-layer" aria-hidden="true"></div>
+  <div id="explosion-layer"></div>
   <div class="app-layout">
-  <aside class="score-panel" id="score-panel">
-    <h2 id="txt-scoreboard">Scoreboard</h2>
-    <div class="score-box">
-      <h3 id="txt-escapes">No button escapes</h3>
-      <div class="score-value" id="move-count">0</div>
-    </div>
-    <div class="score-box">
-      <h3 id="txt-reject-score">Reject your Reject</h3>
-      <div class="score-value" id="touch-count">0</div>
-    </div>
-    <label for="message-log" id="txt-reject-log-label">Reject messages</label>
-    <textarea id="message-log" readonly placeholder="Messages appear here when you chase No…"></textarea>
-  </aside>
-  <main class="card" id="main-card">
-    <!-- Step 0: Language -->
-    <section id="step-language" class="step active">
-      <span class="badge" id="badge-language">Welcome</span>
-      <h1 id="title-language">Choose your language</h1>
-      <p class="subtitle" id="subtitle-language">Pick how you'd like to read your Macau invitation.</p>
-      <div class="lang-options">
-        <button type="button" class="lang-btn" data-lang="yue">
-          <strong>廣東話</strong>
-          <span>Cantonese</span>
-        </button>
-        <button type="button" class="lang-btn" data-lang="zh-TW">
-          <strong>繁體中文（台灣）</strong>
-          <span>Chinese — Taiwan edition</span>
-        </button>
-        <button type="button" class="lang-btn" data-lang="en-SG">
-          <strong>English (Singapore)</strong>
-          <span>Singlish vibes included lah</span>
-        </button>
+    <aside class="score-panel" id="score-panel">
+      <h2 id="txt-scoreboard">Scoreboard</h2>
+      <div class="score-box">
+        <h3 id="txt-escapes">No button escapes</h3>
+        <div class="score-value" id="move-count">0</div>
       </div>
-    </section>
-
-    <!-- Step 1: Email -->
-    <section id="step-email" class="step">
-      <button type="button" class="btn btn-back" id="back-to-language">← Back</button>
-      <span class="badge" id="badge-email">Welcome</span>
-      <h1 id="title-email">You're invited</h1>
-      <p class="subtitle" id="subtitle-email">Enter your email to open your personal Macau invitation.</p>
-      <form id="email-form">
-        <label for="user-email" id="label-email">Your email</label>
-        <input
-          type="email"
-          id="user-email"
-          name="email"
-          placeholder="you@example.com"
-          required
-          autocomplete="email"
-        />
-        <button type="submit" class="btn btn-primary" id="btn-email-continue">Continue</button>
-      </form>
-      <p class="status" id="email-hint" role="status"></p>
-    </section>
-
-    <!-- Step 2: Invitation question -->
-    <section id="step-invite" class="step">
-      <button type="button" class="btn btn-back" id="back-to-email">← Back</button>
-      <span class="badge" id="badge-invite">Macau</span>
-      <p class="registered-email" id="show-email"></p>
-      <h1 id="title-invite">Would you accept the invitation to Macau?</h1>
-      <p class="prompt-message" id="prompt-message"></p>
-      <button type="button" class="btn btn-yes" id="btn-yes">Yes! I will love to!</button>
-      <button type="button" class="btn btn-no" id="btn-no">No</button>
-    </section>
-
-    <!-- Step 3: Activities -->
-    <section id="step-activities" class="step">
-      <button type="button" class="btn btn-back" id="back-to-invite">← Back</button>
-      <span class="badge" id="badge-activities">Plan your trip</span>
-      <h1 id="title-activities">What do you want to do in Macau?</h1>
-      <p class="subtitle" id="subtitle-activities">Select as many activities as you like — tap each card to add or remove.</p>
-      <p class="activity-count" id="activity-count">0 activities selected</p>
-      <div class="activity-list" id="activity-list">
-        <label class="activity-card">
-          <span class="activity-icon" aria-hidden="true">🎰</span>
-          <div class="activity-body">
-            <strong class="activity-name"></strong>
-            <p class="activity-desc"></p>
-          </div>
-          <input type="checkbox" name="activity" data-activity-id="casino" />
-        </label>
-        <label class="activity-card">
-          <span class="activity-icon" aria-hidden="true">🍜</span>
-          <div class="activity-body">
-            <strong class="activity-name"></strong>
-            <p class="activity-desc"></p>
-          </div>
-          <input type="checkbox" name="activity" data-activity-id="food" />
-        </label>
-        <label class="activity-card">
-          <span class="activity-icon" aria-hidden="true">🏛️</span>
-          <div class="activity-body">
-            <strong class="activity-name"></strong>
-            <p class="activity-desc"></p>
-          </div>
-          <input type="checkbox" name="activity" data-activity-id="historic" />
-        </label>
-        <label class="activity-card">
-          <span class="activity-icon" aria-hidden="true">🛍️</span>
-          <div class="activity-body">
-            <strong class="activity-name"></strong>
-            <p class="activity-desc"></p>
-          </div>
-          <input type="checkbox" name="activity" data-activity-id="shopping" />
-        </label>
-        <label class="activity-card">
-          <span class="activity-icon" aria-hidden="true">🌊</span>
-          <div class="activity-body">
-            <strong class="activity-name"></strong>
-            <p class="activity-desc"></p>
-          </div>
-          <input type="checkbox" name="activity" data-activity-id="sightseeing" />
-        </label>
+      <div class="score-box">
+        <h3 id="txt-reject-score">Reject your Reject</h3>
+        <div class="score-value" id="touch-count">0</div>
       </div>
-      <button type="button" class="btn btn-primary" id="btn-activities-continue">Continue to pick a date</button>
-      <!-- btn text updated via i18n -->
-    </section>
+      <label for="message-log" id="txt-reject-log-label">Reject messages</label>
+      <textarea id="message-log" readonly placeholder="Messages appear here when you chase No…"></textarea>
+    </aside>
 
-    <!-- Step 4: Date -->
-    <section id="step-date" class="step">
-      <button type="button" class="btn btn-back" id="back-to-activities">← Back</button>
-      <span class="badge" id="badge-date">Almost there</span>
-      <div class="confetti">🎉</div>
-      <h1 id="title-date">Pick your date</h1>
-      <p class="subtitle" id="subtitle-date">Choose your visit date, then click Send invitation.</p>
-      <form id="date-form">
-        <label for="visit-date" id="label-date">Date (YYYY/DD/MM)</label>
-        <input type="date" id="visit-date" name="date" required />
-        <p class="date-hint" id="formatted-date">Selected: —</p>
-        <button type="submit" class="btn btn-primary btn-send" id="send-btn" disabled>Send invitation</button>
-      </form>
-      <p class="status" id="status" role="status"></p>
-    </section>
+    <div class="shell" id="shell">
+      <main class="card" id="main-card">
+        <section id="step-language" class="step active">
+          <p class="eyebrow" id="eyebrow-language">Invitation</p>
+          <h1 class="brand" id="brand-language">Singapore Dinner</h1>
+          <p class="subtitle" id="subtitle-language">Choose your language to continue.</p>
+          <div class="lang-options">
+            <button type="button" class="lang-btn" data-lang="en-SG">
+              <strong>English (Singapore)</strong>
+              <span>Come join us for dinner lah</span>
+            </button>
+            <button type="button" class="lang-btn" data-lang="zh-TW">
+              <strong>繁體中文（台灣）</strong>
+              <span>新加坡晚餐邀請</span>
+            </button>
+            <button type="button" class="lang-btn" data-lang="yue">
+              <strong>廣東話</strong>
+              <span>新加坡晚餐邀請</span>
+            </button>
+          </div>
+        </section>
 
-    <!-- Step 5: Done -->
-    <section id="step-done" class="step">
-      <div class="confetti">✈️</div>
-      <h1 id="title-done">Invitation sent!</h1>
-      <p class="subtitle" id="subtitle-done">Check your inbox and <strong>spam folder</strong> for the invitation from houhonuhh@gmail.com.</p>
-    </section>
-  </main>
+        <section id="step-phone" class="step">
+          <button type="button" class="btn btn-back" id="back-to-language">← Back</button>
+          <p class="eyebrow" id="eyebrow-phone">RSVP</p>
+          <h1 class="brand" id="brand-phone">You're invited</h1>
+          <p class="subtitle" id="subtitle-phone">Register your phone number and email to join our Singapore dinner.</p>
+          <form id="phone-form">
+            <label for="user-name" id="label-name">Your name (optional)</label>
+            <input type="text" id="user-name" name="name" autocomplete="name" placeholder="Alex" />
+            <label for="user-phone" id="label-phone">Phone number</label>
+            <input type="tel" id="user-phone" name="phone" required autocomplete="tel" inputmode="tel" placeholder="+65 9123 4567" />
+            <p class="phone-hint" id="phone-hint">Include country code if you can (e.g. +65).</p>
+            <label for="user-email" id="label-email">Email</label>
+            <input type="email" id="user-email" name="email" required autocomplete="email" inputmode="email" placeholder="you@example.com" />
+            <p class="phone-hint" id="email-hint">We'll send your dinner booking confirmation here.</p>
+            <button type="submit" class="btn btn-primary" id="btn-register">Register</button>
+          </form>
+          <p class="status" id="phone-status" role="status"></p>
+        </section>
+
+        <section id="step-invite" class="step">
+          <button type="button" class="btn btn-back" id="back-to-phone">← Back</button>
+          <p class="eyebrow" id="eyebrow-invite">Dinner</p>
+          <h1 class="brand" id="brand-invite">Are you interested in dinner?</h1>
+          <p class="subtitle" id="subtitle-invite"></p>
+          <p class="prompt-message" id="prompt-message"></p>
+          <button type="button" class="btn btn-yes" id="btn-yes">Yes! Let's eat!</button>
+          <button type="button" class="btn btn-no" id="btn-no">No</button>
+        </section>
+
+        <section id="step-cuisine" class="step">
+          <button type="button" class="btn btn-back" id="back-to-invite">← Back</button>
+          <p class="eyebrow" id="eyebrow-cuisine">Menu</p>
+          <h1 class="brand" id="brand-cuisine">What do you want to eat?</h1>
+          <p class="subtitle" id="subtitle-cuisine">Pick one or more cuisines for that night.</p>
+          <p class="cuisine-count" id="cuisine-count">0 cuisines selected</p>
+          <div class="cuisine-list" id="cuisine-list">
+            <label class="cuisine-card">
+              <span class="cuisine-icon" aria-hidden="true">🥢</span>
+              <span class="cuisine-body">
+                <strong class="cuisine-name">Chinese / Zi Char</strong>
+                <span class="cuisine-desc">Shared dishes, claypot, and classic Singapore zi char.</span>
+              </span>
+              <input type="checkbox" name="cuisine" data-cuisine-id="chinese" />
+            </label>
+            <label class="cuisine-card">
+              <span class="cuisine-icon" aria-hidden="true">🌶️</span>
+              <span class="cuisine-body">
+                <strong class="cuisine-name">Malay / Indonesian</strong>
+                <span class="cuisine-desc">Nasi lemak vibes, sambal, and hearty Malay favourites.</span>
+              </span>
+              <input type="checkbox" name="cuisine" data-cuisine-id="malay" />
+            </label>
+            <label class="cuisine-card">
+              <span class="cuisine-icon" aria-hidden="true">🍛</span>
+              <span class="cuisine-body">
+                <strong class="cuisine-name">Indian</strong>
+                <span class="cuisine-desc">Banana leaf, tandoori, and fragrant curries.</span>
+              </span>
+              <input type="checkbox" name="cuisine" data-cuisine-id="indian" />
+            </label>
+            <label class="cuisine-card">
+              <span class="cuisine-icon" aria-hidden="true">🍣</span>
+              <span class="cuisine-body">
+                <strong class="cuisine-name">Japanese</strong>
+                <span class="cuisine-desc">Sushi, ramen, yakitori — clean and comforting.</span>
+              </span>
+              <input type="checkbox" name="cuisine" data-cuisine-id="japanese" />
+            </label>
+            <label class="cuisine-card">
+              <span class="cuisine-icon" aria-hidden="true">🍜</span>
+              <span class="cuisine-body">
+                <strong class="cuisine-name">Korean</strong>
+                <span class="cuisine-desc">BBQ, hot stews, and banchan to share.</span>
+              </span>
+              <input type="checkbox" name="cuisine" data-cuisine-id="korean" />
+            </label>
+            <label class="cuisine-card">
+              <span class="cuisine-icon" aria-hidden="true">🦐</span>
+              <span class="cuisine-body">
+                <strong class="cuisine-name">Seafood</strong>
+                <span class="cuisine-desc">Chilli crab energy, grilled catch, ocean-fresh plates.</span>
+              </span>
+              <input type="checkbox" name="cuisine" data-cuisine-id="seafood" />
+            </label>
+            <label class="cuisine-card">
+              <span class="cuisine-icon" aria-hidden="true">🍲</span>
+              <span class="cuisine-body">
+                <strong class="cuisine-name">Hotpot</strong>
+                <span class="cuisine-desc">Broth, dipping sauces, and a long shared table.</span>
+              </span>
+              <input type="checkbox" name="cuisine" data-cuisine-id="hotpot" />
+            </label>
+            <label class="cuisine-card">
+              <span class="cuisine-icon" aria-hidden="true">🥩</span>
+              <span class="cuisine-body">
+                <strong class="cuisine-name">Western / Steak</strong>
+                <span class="cuisine-desc">Steaks, pasta, and a proper sit-down dinner.</span>
+              </span>
+              <input type="checkbox" name="cuisine" data-cuisine-id="western" />
+            </label>
+          </div>
+          <button type="button" class="btn btn-primary" id="btn-cuisine-continue">Continue to pick a date</button>
+        </section>
+
+        <section id="step-date" class="step">
+          <button type="button" class="btn btn-back" id="back-to-cuisine">← Back</button>
+          <p class="eyebrow" id="eyebrow-date">Almost there</p>
+          <h1 class="brand" id="brand-date">Pick the dinner date</h1>
+          <p class="subtitle" id="subtitle-date">Choose a night, then confirm your RSVP.</p>
+          <label for="dinner-date" id="label-date">Date</label>
+          <input type="date" id="dinner-date" required />
+          <p class="date-preview" id="formatted-date">Selected: —</p>
+          <button type="button" class="btn btn-primary" id="btn-send" disabled>Confirm dinner RSVP</button>
+          <p class="status" id="date-status" role="status"></p>
+        </section>
+
+        <section id="step-done" class="step">
+          <div class="done-mark" aria-hidden="true">✓</div>
+          <p class="eyebrow" id="eyebrow-done">Confirmed</p>
+          <h1 class="brand" id="brand-done">You're on the list</h1>
+          <p class="subtitle" id="subtitle-done">Thanks! Your dinner preferences have been sent — we'll be in touch soon.</p>
+          <p class="status success show" id="done-summary"></p>
+        </section>
+      </main>
+    </div>
   </div>
 
   <script>
     const TRANSLATIONS = {
       "en-SG": {
-        badgeLanguage: "Welcome", titleLanguage: "Choose your language",
-        subtitleLanguage: "Pick how you'd like to read your Macau invitation.",
-        badgeEmail: "Welcome", titleEmail: "You're invited",
-        subtitleEmail: "Enter your email to open your personal Macau invitation.",
-        labelEmail: "Your email", btnContinue: "Continue", btnBack: "← Back",
-        badgeInvite: "Macau", inviteQuestion: "Would you accept the invitation to Macau?",
-        btnYes: "Yes! I will love to!", btnNo: "No",
-        scoreboard: "Scoreboard", escapes: "No button escapes", rejectScore: "Reject your Reject",
-        rejectLog: "Reject messages", logPlaceholder: "Messages appear here when you chase No…",
-        badgeActivities: "Plan your trip", titleActivities: "What do you want to do in Macau?",
-        subtitleActivities: "Select as many activities as you like — tap each card to add or remove.",
-        activity0: "0 activities selected", activity1: "1 activity selected",
-        activityN: "activities selected",
-        activities: {
-          casino: { name: "Casino & nightlife", desc: "World-famous casinos, neon skylines, and late-night vibes along the Cotai Strip." },
-          food: { name: "Macanese food tour", desc: "Egg tarts, pork chop buns, African chicken, and fusion flavours unique to Macau." },
-          historic: { name: "Historic sites", desc: "Walk through UNESCO heritage — Ruins of St. Paul's, Senado Square, and old churches." },
-          shopping: { name: "Shopping", desc: "Luxury malls, local boutiques, and souvenirs around Senado Square and Taipa Village." },
-          sightseeing: { name: "Day trip & sightseeing", desc: "Macau Tower views, Coloane beaches, A-Ma Temple, and scenic walks across the city." },
+        eyebrowLanguage: "Invitation",
+        brandLanguage: "Singapore Dinner",
+        subtitleLanguage: "Choose your language to continue.",
+        back: "← Back",
+        eyebrowPhone: "RSVP",
+        brandPhone: "You're invited",
+        subtitlePhone: "Register your phone number and email to join our Singapore dinner.",
+        labelName: "Your name (optional)",
+        labelPhone: "Phone number",
+        phoneHint: "Include country code if you can (e.g. +65).",
+        labelEmail: "Email",
+        emailHint: "We'll send your dinner booking confirmation here.",
+        namePlaceholder: "Alex",
+        phonePlaceholder: "+65 9123 4567",
+        emailPlaceholder: "you@example.com",
+        btnRegister: "Register",
+        sendingPhone: "Sending your registration…",
+        alertEmail: "Please enter a valid email.",
+        eyebrowInvite: "Dinner",
+        brandInvite: "Are you interested in dinner?",
+        btnYes: "Yes! Let's eat!",
+        btnNo: "No",
+        scoreboard: "Scoreboard",
+        escapes: "No button escapes",
+        rejectScore: "Reject your Reject",
+        rejectLog: "Reject messages",
+        logPlaceholder: "Messages appear here when you chase No…",
+        eyebrowCuisine: "Menu",
+        brandCuisine: "What do you want to eat?",
+        subtitleCuisine: "Pick one or more cuisines for that night.",
+        cuisine0: "0 cuisines selected",
+        cuisine1: "1 cuisine selected",
+        cuisineN: "cuisines selected",
+        btnCuisine: "Continue to pick a date",
+        alertCuisine: "Please pick at least one cuisine!",
+        cuisines: {
+          chinese: { name: "Chinese / Zi Char", desc: "Shared dishes, claypot, and classic Singapore zi char." },
+          malay: { name: "Malay / Indonesian", desc: "Nasi lemak vibes, sambal, and hearty Malay favourites." },
+          indian: { name: "Indian", desc: "Banana leaf, tandoori, and fragrant curries." },
+          japanese: { name: "Japanese", desc: "Sushi, ramen, yakitori — clean and comforting." },
+          korean: { name: "Korean", desc: "BBQ, hot stews, and banchan to share." },
+          seafood: { name: "Seafood", desc: "Chilli crab energy, grilled catch, ocean-fresh plates." },
+          hotpot: { name: "Hotpot", desc: "Broth, dipping sauces, and a long shared table." },
+          western: { name: "Western / Steak", desc: "Steaks, pasta, and a proper sit-down dinner." },
         },
-        btnActivities: "Continue to pick a date",
-        badgeDate: "Almost there", titleDate: "Pick your date",
-        subtitleDate: "Choose your visit date, then click Send invitation.",
-        labelDate: "Date (YYYY/DD/MM)", selected: "Selected", btnSend: "Send invitation",
-        titleDone: "Invitation sent!",
-        subtitleDone: "Check your inbox and <strong>spam folder</strong> for the invitation from houhonuhh@gmail.com.",
-        registered: "Registered", alertActivity: "Please pick at least one activity!",
+        eyebrowDate: "Almost there",
+        brandDate: "Pick the dinner date",
+        subtitleDate: "Choose a night, then confirm your RSVP.",
+        labelDate: "Date",
+        selected: "Selected",
+        btnSend: "Confirm dinner RSVP",
+        sendingRsvp: "Sending your dinner RSVP…",
         alertDate: "Please pick a date first.",
+        eyebrowDone: "Confirmed",
+        brandDone: "You're on the list",
+        subtitleDone: "Thanks! A booking confirmation has been sent to your email.",
+        registeredAs: "Registered",
         noMessages: [
           "Are you sure?", "Maybe think again lah?", "Wah, you serious ah?",
-          "Jialat — why say no?", "Aiya, Macau very shiok one!",
+          "Jialat — why say no to dinner?", "Aiya, dinner very shiok one!",
           "Don't play play lah — say Yes!", "Confirm plus chop want to reject?",
-          "Cannot lah, must go one!", "You siao ah, say no for what?",
-          "Shiok trip leh, just say Yes can already!",
+          "Cannot lah, must eat one!", "You siao ah, say no for what?",
+          "Shiok meal leh, just say Yes can already!",
           "Alamak, the No button running away already!",
           "Steady pom pi pi — click Yes lah!",
         ],
         mockMessages: [
-          "BOOM! You blew up the No button — still not going to Macau meh?",
+          "BOOM! You blew up the No button — still not joining dinner meh?",
           "Nice try lah… but the No button respawned. Say Yes!",
           "You clicked No and it exploded — your rejection got rejected!",
           "Alamak! Even the button also cannot tahan your finger.",
@@ -693,98 +707,160 @@
         ],
       },
       "zh-TW": {
-        badgeLanguage: "歡迎", titleLanguage: "選擇語言",
-        subtitleLanguage: "選擇你想閱讀澳門邀請的語言。",
-        badgeEmail: "歡迎", titleEmail: "你收到邀請了",
-        subtitleEmail: "輸入電子郵件以開啟你的澳門邀請。",
-        labelEmail: "你的電子郵件", btnContinue: "繼續", btnBack: "← 返回",
-        badgeInvite: "澳門", inviteQuestion: "你願意接受澳門邀請嗎？",
-        btnYes: "願意！超想去！", btnNo: "不要",
-        scoreboard: "計分板", escapes: "「不要」逃跑次數", rejectScore: "拒絕你的拒絕",
-        rejectLog: "拒絕訊息", logPlaceholder: "追「不要」按鈕時訊息會顯示在這裡…",
-        badgeActivities: "規劃行程", titleActivities: "你想在澳門做什麼？",
-        subtitleActivities: "可複選多項活動 — 點擊卡片加入或取消。",
-        activity0: "已選 0 項活動", activity1: "已選 1 項活動",
-        activityN: "項活動已選",
-        activities: {
-          casino: { name: "賭場與夜生活", desc: "世界知名賭場、霓虹天際線，以及路氹城的深夜氛圍。" },
-          food: { name: "澳門美食之旅", desc: "蛋撻、豬扒包、非洲雞，還有澳門獨有的融合風味。" },
-          historic: { name: "歷史古蹟", desc: "漫步世界遺產 — 大三巴牌坊、議事亭前地與古老教堂。" },
-          shopping: { name: "購物", desc: "豪華商場、特色小店，議事亭前地與氹仔舊城的紀念品。" },
-          sightseeing: { name: "一日遊與觀光", desc: "澳門塔景色、路環海灘、媽閣廟，以及城市漫步。" },
+        eyebrowLanguage: "邀請函",
+        brandLanguage: "新加坡晚餐",
+        subtitleLanguage: "請選擇語言以繼續。",
+        back: "← 返回",
+        eyebrowPhone: "回覆",
+        brandPhone: "誠摯邀請你",
+        subtitlePhone: "請登記手機號碼與電子郵件，參加我們的新加坡晚餐。",
+        labelName: "你的名字（選填）",
+        labelPhone: "手機號碼",
+        phoneHint: "建議加上國碼（例如 +65）。",
+        labelEmail: "電子郵件",
+        emailHint: "晚餐預約確認會寄到這個信箱。",
+        namePlaceholder: "小明",
+        phonePlaceholder: "+65 9123 4567",
+        emailPlaceholder: "you@example.com",
+        btnRegister: "登記",
+        sendingPhone: "正在傳送你的登記資料…",
+        alertEmail: "請輸入有效的電子郵件。",
+        eyebrowInvite: "晚餐",
+        brandInvite: "你有興趣一起吃晚餐嗎？",
+        btnYes: "好啊！一起吃！",
+        btnNo: "不要",
+        scoreboard: "計分板",
+        escapes: "「不要」逃跑次數",
+        rejectScore: "拒絕你的拒絕",
+        rejectLog: "拒絕訊息",
+        logPlaceholder: "追「不要」按鈕時訊息會顯示在這裡…",
+        eyebrowCuisine: "菜單",
+        brandCuisine: "想吃什麼料理？",
+        subtitleCuisine: "可複選當晚想吃的料理。",
+        cuisine0: "已選 0 種料理",
+        cuisine1: "已選 1 種料理",
+        cuisineN: "種料理已選",
+        btnCuisine: "繼續選擇日期",
+        alertCuisine: "請至少選一種料理！",
+        cuisines: {
+          chinese: { name: "中式／煮炒", desc: "共享菜色、砂鍋與新加坡經典煮炒。" },
+          malay: { name: "馬來／印尼", desc: "椰漿飯氛圍、參峇與豐盛馬來菜。" },
+          indian: { name: "印度菜", desc: "香蕉葉、烤餅與香濃咖哩。" },
+          japanese: { name: "日本料理", desc: "壽司、拉麵、燒鳥 — 清爽又療癒。" },
+          korean: { name: "韓式", desc: "烤肉、熱湯與小菜一起分享。" },
+          seafood: { name: "海鮮", desc: "辣椒螃蟹精神、炭烤與鮮味海鮮。" },
+          hotpot: { name: "火鍋", desc: "湯底、沾醬與一桌慢慢吃。" },
+          western: { name: "西餐／牛排", desc: "牛排、義大利麵與正式晚餐。" },
         },
-        btnActivities: "繼續選擇日期",
-        badgeDate: "快完成了", titleDate: "選擇日期",
-        subtitleDate: "選好日期後，點擊發送邀請。",
-        labelDate: "日期 (YYYY/DD/MM)", selected: "已選", btnSend: "發送邀請",
-        titleDone: "邀請已發送！",
-        subtitleDone: "請查看收件匣及<strong>垃圾郵件</strong>，邀請來自 houhonuhh@gmail.com。",
-        registered: "已登記", alertActivity: "請至少選擇一項活動！",
+        eyebrowDate: "快完成了",
+        brandDate: "選擇晚餐日期",
+        subtitleDate: "選好晚上，再確認回覆。",
+        labelDate: "日期",
+        selected: "已選",
+        btnSend: "確認晚餐回覆",
+        sendingRsvp: "正在傳送你的晚餐回覆…",
         alertDate: "請先選擇日期。",
+        eyebrowDone: "已確認",
+        brandDone: "你已在名單上",
+        subtitleDone: "謝謝！預約確認已寄到你的電子郵件。",
+        registeredAs: "已登記",
         noMessages: [
-          "確定嗎？", "再想一下啦？", "蛤？你是認真的？",
-          "不要鬧啦 — 澳門超讚的！", "真的不要喔？",
-          "拜託啦，按「願意」！", "再考慮一下好不好？",
-          "不行啦，一定要去！", "你在想什麼啦？",
-          "超讚的行程欸，按願意啦！", "「不要」按鈕都跑走了！",
-          "穩穩的 — 按願意就對了！",
+          "確定嗎？", "再想一下？", "哇，你認真的？",
+          "不要晚餐太可惜了！", "真的不要嗎？",
+          "別鬧了，點「好啊」！", "再確認一次好不好？",
+          "不行啦，一定要來！", "你在想什麼啊？",
+          "超好吃的行程欸，就點好啊！", "「不要」按鈕開始跑了！",
+          "穩穩的 — 點好啊就對了！",
         ],
         mockMessages: [
-          "砰！你把「不要」炸掉了 — 還是不去澳門嗎？",
-          "按到了又怎樣，按鈕重生啦！按願意！",
-          "你的拒絕被拒绝了啦！",
-          "哈哈，連按鈕都受不了你！",
-          "厲害喔 — 但願意才是正解啦！",
+          "砰！你把「不要」炸掉了 — 還是不來晚餐嗎？",
+          "不錯試啦…但按鈕又回來了。點好啊！",
+          "你的拒絕被拒絕了！",
+          "唉呀，連按鈕都受不了你！",
+          "哇你好猛 — 但還是點好啊比較對！",
         ],
       },
       yue: {
-        badgeLanguage: "歡迎", titleLanguage: "揀語言",
-        subtitleLanguage: "揀你想點睇澳門邀請。",
-        badgeEmail: "歡迎", titleEmail: "你有邀請",
-        subtitleEmail: "輸入電郵打開你嘅澳門邀請。",
-        labelEmail: "你嘅電郵", btnContinue: "繼續", btnBack: "← 返回",
-        badgeInvite: "澳門", inviteQuestion: "你接唔接受澳門邀請？",
-        btnYes: "接受！好想去！", btnNo: "唔去",
-        scoreboard: "計分板", escapes: "「唔去」走佬次數", rejectScore: "拒絕你嘅拒絕",
-        rejectLog: "拒絕訊息", logPlaceholder: "追「唔去」掣時訊息會喺呢度…",
-        badgeActivities: "計劃行程", titleActivities: "你想喺澳門做咩？",
-        subtitleActivities: "可以揀多項 — 撳卡片加入或取消。",
-        activity0: "揀咗 0 項", activity1: "揀咗 1 項",
-        activityN: "項已揀",
-        activities: {
-          casino: { name: "賭場同夜生活", desc: "世界出名賭場、霓虹夜景，同路氹城嘅深夜氣氛。" },
-          food: { name: "澳門美食團", desc: "蛋撻、豬扒包、非洲雞，仲有澳門獨有嘅fusion味。" },
-          historic: { name: "歷史古蹟", desc: "行世界遺產 — 大三巴、議事亭前地同古老教堂。" },
-          shopping: { name: "購物", desc: "名牌商場、特色舖頭，議事亭前地同氹仔舊城嘅手信。" },
-          sightseeing: { name: "一日遊同觀光", desc: "澳門塔景致、路環沙灘、媽閣廟，同城市漫步。" },
+        eyebrowLanguage: "邀請",
+        brandLanguage: "新加坡晚餐",
+        subtitleLanguage: "揀語言先繼續啦。",
+        back: "← 返去",
+        eyebrowPhone: "回覆",
+        brandPhone: "誠意邀請你",
+        subtitlePhone: "登記你個電話號碼同電郵，一齊嚟食新加坡晚餐。",
+        labelName: "你個名（選填）",
+        labelPhone: "電話號碼",
+        phoneHint: "可以加埋國碼（例如 +65）。",
+        labelEmail: "電郵",
+        emailHint: "晚餐預約確認會寄去呢個電郵。",
+        namePlaceholder: "阿明",
+        phonePlaceholder: "+65 9123 4567",
+        emailPlaceholder: "you@example.com",
+        btnRegister: "登記",
+        sendingPhone: "緊緊傳緊你嘅登記資料…",
+        alertEmail: "請輸入有效電郵。",
+        eyebrowInvite: "晚餐",
+        brandInvite: "你有興趣一齊食飯嗎？",
+        btnYes: "好呀！一齊食！",
+        btnNo: "唔去",
+        scoreboard: "計分板",
+        escapes: "「唔去」走佬次數",
+        rejectScore: "拒絕你嘅拒絕",
+        rejectLog: "拒絕訊息",
+        logPlaceholder: "追「唔去」掣時訊息會喺呢度…",
+        eyebrowCuisine: "菜單",
+        brandCuisine: "想食咩菜？",
+        subtitleCuisine: "可以揀多種當晚想食嘅料理。",
+        cuisine0: "揀咗 0 種",
+        cuisine1: "揀咗 1 種",
+        cuisineN: "種已揀",
+        btnCuisine: "繼續揀日期",
+        alertCuisine: "請至少揀一種菜！",
+        cuisines: {
+          chinese: { name: "中菜／煮炒", desc: "分享菜、煲仔同新加坡經典煮炒。" },
+          malay: { name: "馬來／印尼", desc: "椰漿飯感覺、參峇同豐富馬來菜。" },
+          indian: { name: "印度菜", desc: "蕉葉、烤餅同香咖哩。" },
+          japanese: { name: "日本菜", desc: "壽司、拉麵、燒鳥 — 清爽又舒服。" },
+          korean: { name: "韓式", desc: "燒肉、熱湯同小菜一齊分享。" },
+          seafood: { name: "海鮮", desc: "辣椒蟹感覺、炭燒同新鮮海鮮。" },
+          hotpot: { name: "火鍋", desc: "湯底、醬料同一枱慢慢食。" },
+          western: { name: "西餐／牛扒", desc: "牛扒、意粉同正式晚餐。" },
         },
-        btnActivities: "繼續揀日期",
-        badgeDate: "差少少", titleDate: "揀日期",
-        subtitleDate: "揀好日期之後，撳發送邀請。",
-        labelDate: "日期 (YYYY/DD/MM)", selected: "已揀", btnSend: "發送邀請",
-        titleDone: "邀請已發送！",
-        subtitleDone: "查收收件匣同<strong>垃圾郵件</strong>，邀請來自 houhonuhh@gmail.com。",
-        registered: "已登記", alertActivity: "請至少揀一項活動！",
-        alertDate: "請先揀日期。",
+        eyebrowDate: "差少少",
+        brandDate: "揀晚餐日子",
+        subtitleDate: "揀好晚，再確認回覆。",
+        labelDate: "日子",
+        selected: "已揀",
+        btnSend: "確認晚餐回覆",
+        sendingRsvp: "緊緊傳緊你嘅晚餐回覆…",
+        alertDate: "請先揀日子。",
+        eyebrowDone: "搞掂",
+        brandDone: "你已經入咗名單",
+        subtitleDone: "多謝！預約確認已經寄去你個電郵。",
+        registeredAs: "已登記",
         noMessages: [
-          "真係唔去？", "諗清楚未啊？", "吓？你玩嘅？",
-          "做咩唔去啫？", "澳門好正㗎！", "唔好玩啦 — 撳接受！",
-          "再諗吓啦？", "唔得㗎，一定要去！", "你諗緊咩啊？",
-          "正到爆嘅行程喎！", "「唔去」掣走咗啦！", "穩陣啲 — 撳接受啦！",
+          "確定呀？", "再諗諗先？", "嘩，你認真？",
+          "唔食飯好可惜喎！", "真係唔去？",
+          "唔好玩啦 — 撳好呀！", "再確認一次？",
+          "唔得啦，一定要嚟！", "你諗緊咩呀？",
+          "好食到飛起，撳好呀得㗎啦！", "「唔去」掣走佬啦！",
+          "穩陣啲 — 撳好呀啦！",
         ],
         mockMessages: [
-          "嘭！你把「唔去」炸咗 — 都係唔去澳門？",
-          "撳到又點，個掣重生咗！撳接受！",
-          "你嘅拒絕被拒絕咗！", "連個掣都頂唔順你！",
-          "犀利喎 — 但接受先啱！",
+          "砰！你炸咗「唔去」掣 — 仲係唔嚟食飯？",
+          "好試呀…但掣又返嚟。撳好呀！",
+          "你嘅拒絕被拒絕咗！",
+          "哎吔，連掣都頂唔順你！",
+          "嘩你好勁 — 但仲係撳好呀正路！",
         ],
       },
     };
 
-    let lang = localStorage.getItem("macau-lang") || "en-SG";
+    let lang = localStorage.getItem("sg-dinner-lang") || "en-SG";
+    let userPhone = "";
     let userEmail = "";
-    let emailConfig = null;
-    let selectedActivities = [];
+    let userName = "";
+    let selectedCuisines = [];
     let dodgeCount = 0;
     let mockCount = 0;
     let lastDodgeAt = 0;
@@ -800,99 +876,133 @@
     let pointerInsideNo = false;
     let escapeBurstActive = false;
     let stoppedFrames = 0;
-    const AVOID_RADIUS = 120;
+    let lastExplodeAt = 0;
+    let sendingRsvp = false;
+
+    const isCoarsePointer = () => window.matchMedia("(pointer: coarse)").matches;
+    const AVOID_RADIUS = () => (isCoarsePointer() ? 170 : 120);
     const DODGE_COOLDOWN = 700;
     const PAD = 12;
     const FRICTION = 0.82;
-    const FLEE_FORCE = 2.8;
+    const FLEE_FORCE = () => (isCoarsePointer() ? 3.6 : 2.8);
     const STOP_SPEED = 0.45;
     const STOP_FRAMES = 14;
 
-    const btnNo = document.getElementById("btn-no");
-    const moveCountEl = document.getElementById("move-count");
-    const touchCountEl = document.getElementById("touch-count");
-    const messageLogEl = document.getElementById("message-log");
-    const scorePanel = document.getElementById("score-panel");
-    const explosionLayer = document.getElementById("explosion-layer");
-
-    const mainCard = document.getElementById("main-card");
-    const activityCountEl = document.getElementById("activity-count");
+    const t = () => TRANSLATIONS[lang] || TRANSLATIONS["en-SG"];
 
     const steps = {
       language: document.getElementById("step-language"),
-      email: document.getElementById("step-email"),
+      phone: document.getElementById("step-phone"),
       invite: document.getElementById("step-invite"),
-      activities: document.getElementById("step-activities"),
+      cuisine: document.getElementById("step-cuisine"),
       date: document.getElementById("step-date"),
       done: document.getElementById("step-done"),
     };
 
-    function t() {
-      return TRANSLATIONS[lang] || TRANSLATIONS["en-SG"];
+    const shell = document.getElementById("shell");
+    const scorePanel = document.getElementById("score-panel");
+    const btnNo = document.getElementById("btn-no");
+    const btnYes = document.getElementById("btn-yes");
+    const btnRegister = document.getElementById("btn-register");
+    const btnSend = document.getElementById("btn-send");
+    const phoneStatus = document.getElementById("phone-status");
+    const dateStatus = document.getElementById("date-status");
+    const moveCountEl = document.getElementById("move-count");
+    const touchCountEl = document.getElementById("touch-count");
+    const messageLogEl = document.getElementById("message-log");
+    const explosionLayer = document.getElementById("explosion-layer");
+    const cuisineCountEl = document.getElementById("cuisine-count");
+
+    function showStep(name) {
+      Object.values(steps).forEach((el) => el.classList.remove("active"));
+      steps[name].classList.add("active");
+      shell.classList.toggle("wide", name === "cuisine");
+      scorePanel.classList.toggle("visible", name === "invite");
+      document.body.classList.toggle("invite-lock", name === "invite");
+    }
+
+    function setStatus(el, type, message) {
+      el.className = `status show ${type}`;
+      el.textContent = message;
+    }
+
+    function clearStatus(el) {
+      el.className = "status";
+      el.textContent = "";
+    }
+
+    function applyCuisineLanguage() {
+      const items = t().cuisines;
+      document.querySelectorAll("#cuisine-list input[data-cuisine-id]").forEach((input) => {
+        const id = input.dataset.cuisineId;
+        const data = items[id];
+        if (!data) return;
+        const card = input.closest(".cuisine-card");
+        card.querySelector(".cuisine-name").textContent = data.name;
+        card.querySelector(".cuisine-desc").textContent = data.desc;
+      });
+    }
+
+    function updateCuisineCount() {
+      const n = document.querySelectorAll('#cuisine-list input[name="cuisine"]:checked').length;
+      const tr = t();
+      if (n === 0) cuisineCountEl.textContent = tr.cuisine0;
+      else if (n === 1) cuisineCountEl.textContent = tr.cuisine1;
+      else cuisineCountEl.textContent = `${n} ${tr.cuisineN}`;
     }
 
     function applyLanguage() {
       const tr = t();
+      document.documentElement.lang = lang === "en-SG" ? "en" : "zh-Hant";
       const map = {
-        "badge-language": tr.badgeLanguage, "title-language": tr.titleLanguage,
-        "subtitle-language": tr.subtitleLanguage, "badge-email": tr.badgeEmail,
-        "title-email": tr.titleEmail, "subtitle-email": tr.subtitleEmail,
-        "label-email": tr.labelEmail, "btn-email-continue": tr.btnContinue,
-        "badge-invite": tr.badgeInvite, "title-invite": tr.inviteQuestion,
-        "btn-yes": tr.btnYes, "btn-no": tr.btnNo,
-        "txt-scoreboard": tr.scoreboard, "txt-escapes": tr.escapes,
-        "txt-reject-score": tr.rejectScore, "txt-reject-log-label": tr.rejectLog,
-        "badge-activities": tr.badgeActivities, "title-activities": tr.titleActivities,
-        "subtitle-activities": tr.subtitleActivities,
-        "btn-activities-continue": tr.btnActivities,
-        "badge-date": tr.badgeDate, "title-date": tr.titleDate,
-        "subtitle-date": tr.subtitleDate, "label-date": tr.labelDate,
-        "send-btn": tr.btnSend, "title-done": tr.titleDone,
+        "eyebrow-language": tr.eyebrowLanguage,
+        "brand-language": tr.brandLanguage,
+        "subtitle-language": tr.subtitleLanguage,
+        "eyebrow-phone": tr.eyebrowPhone,
+        "brand-phone": tr.brandPhone,
+        "subtitle-phone": tr.subtitlePhone,
+        "label-name": tr.labelName,
+        "label-phone": tr.labelPhone,
+        "phone-hint": tr.phoneHint,
+        "label-email": tr.labelEmail,
+        "email-hint": tr.emailHint,
+        "eyebrow-invite": tr.eyebrowInvite,
+        "brand-invite": tr.brandInvite,
+        "btn-yes": tr.btnYes,
+        "btn-no": tr.btnNo,
+        "txt-scoreboard": tr.scoreboard,
+        "txt-escapes": tr.escapes,
+        "txt-reject-score": tr.rejectScore,
+        "txt-reject-log-label": tr.rejectLog,
+        "eyebrow-cuisine": tr.eyebrowCuisine,
+        "brand-cuisine": tr.brandCuisine,
+        "subtitle-cuisine": tr.subtitleCuisine,
+        "btn-cuisine-continue": tr.btnCuisine,
+        "eyebrow-date": tr.eyebrowDate,
+        "brand-date": tr.brandDate,
+        "subtitle-date": tr.subtitleDate,
+        "label-date": tr.labelDate,
+        "btn-send": tr.btnSend,
+        "eyebrow-done": tr.eyebrowDone,
+        "brand-done": tr.brandDone,
+        "subtitle-done": tr.subtitleDone,
       };
       Object.entries(map).forEach(([id, text]) => {
         const el = document.getElementById(id);
         if (el) el.textContent = text;
       });
-      document.getElementById("subtitle-done").innerHTML = tr.subtitleDone;
+      document.getElementById("user-name").placeholder = tr.namePlaceholder;
+      document.getElementById("user-phone").placeholder = tr.phonePlaceholder;
+      document.getElementById("user-email").placeholder = tr.emailPlaceholder;
+      btnRegister.textContent = tr.btnRegister;
       messageLogEl.placeholder = tr.logPlaceholder;
-      document.querySelectorAll(".btn-back").forEach((b) => { b.textContent = tr.btnBack; });
+      document.querySelectorAll(".btn-back").forEach((b) => { b.textContent = tr.back; });
       document.querySelectorAll(".lang-btn").forEach((b) => {
         b.classList.toggle("selected", b.dataset.lang === lang);
       });
-      applyActivitiesLanguage();
-      updateActivityCount();
+      applyCuisineLanguage();
+      updateCuisineCount();
     }
-
-    function applyActivitiesLanguage() {
-      const acts = t().activities;
-      document.querySelectorAll('#activity-list input[data-activity-id]').forEach((input) => {
-        const id = input.dataset.activityId;
-        const data = acts[id];
-        if (!data) return;
-        const card = input.closest(".activity-card");
-        card.querySelector(".activity-name").textContent = data.name;
-        card.querySelector(".activity-desc").textContent = data.desc;
-      });
-    }
-
-    function showStep(name) {
-      Object.values(steps).forEach((el) => el.classList.remove("active"));
-      steps[name].classList.add("active");
-      mainCard.classList.toggle("wide", name === "activities");
-      scorePanel.classList.toggle("visible", name === "invite");
-    }
-
-    function updateActivityCount() {
-      const tr = t();
-      const n = document.querySelectorAll('#activity-list input[name="activity"]:checked').length;
-      if (n === 0) activityCountEl.textContent = tr.activity0;
-      else if (n === 1) activityCountEl.textContent = tr.activity1;
-      else activityCountEl.textContent = `${n} ${t().activityN}`;
-    }
-
-    document.querySelectorAll('#activity-list input[name="activity"]').forEach((cb) => {
-      cb.addEventListener("change", updateActivityCount);
-    });
 
     function formatDateYyyyDdMm(isoDate) {
       if (!isoDate) return "—";
@@ -946,19 +1056,16 @@
       pointerInsideNo = inside;
     }
 
+    function stopDodgeLoop() {
+      dodgeAnimating = false;
+    }
+
     function resetNoButtonPosition() {
       stopDodgeLoop();
-      btnNo.classList.remove("dodging");
+      btnNo.classList.remove("dodging", "exploding");
       btnNo.style.left = "";
       btnNo.style.top = "";
       btnNo.style.width = "";
-    }
-
-    function resetNoButton() {
-      resetNoButtonPosition();
-      dodgeCount = 0;
-      lastDodgeAt = 0;
-      resetScores();
     }
 
     function enableNoDodge() {
@@ -994,7 +1101,7 @@
     }
 
     function createExplosion(cx, cy) {
-      const colors = ["#c9a227", "#8b1538", "#ff6b35", "#ffd700", "#e8dfd0"];
+      const colors = ["#e8a838", "#1f8a66", "#7ec8b8", "#ff6b35", "#16324a"];
       for (let i = 0; i < 18; i++) {
         const p = document.createElement("span");
         p.className = "explosion-burst";
@@ -1008,6 +1115,13 @@
         explosionLayer.appendChild(p);
         setTimeout(() => p.remove(), 600);
       }
+    }
+
+    function clampButtonPosition(left, top, width, height) {
+      return {
+        left: Math.max(PAD, Math.min(window.innerWidth - width - PAD, left)),
+        top: Math.max(PAD, Math.min(window.innerHeight - height - PAD, top)),
+      };
     }
 
     function respawnNoButton() {
@@ -1029,8 +1143,6 @@
       stoppedFrames = 0;
     }
 
-    let lastExplodeAt = 0;
-
     function explodeNoButton(e) {
       e.preventDefault();
       e.stopPropagation();
@@ -1041,7 +1153,6 @@
 
       const rect = btnNo.getBoundingClientRect();
       createExplosion(rect.left + rect.width / 2, rect.top + rect.height / 2);
-
       touchCount += 1;
       touchCountEl.textContent = String(touchCount);
 
@@ -1054,13 +1165,6 @@
         respawnNoButton();
         btnNo.classList.remove("exploding");
       }, 520);
-    }
-
-    function clampButtonPosition(left, top, width, height) {
-      return {
-        left: Math.max(PAD, Math.min(window.innerWidth - width - PAD, left)),
-        top: Math.max(PAD, Math.min(window.innerHeight - height - PAD, top)),
-      };
     }
 
     function fleeNoButton() {
@@ -1077,10 +1181,10 @@
       const dx = cx - mouseX;
       const dy = cy - mouseY;
       const dist = Math.hypot(dx, dy);
-      const fleeing = dist < AVOID_RADIUS && dist > 1;
+      const fleeing = dist < AVOID_RADIUS() && dist > 1;
 
       if (fleeing) {
-        const strength = ((AVOID_RADIUS - dist) / AVOID_RADIUS) * FLEE_FORCE;
+        const strength = ((AVOID_RADIUS() - dist) / AVOID_RADIUS()) * FLEE_FORCE();
         btnVelX += (dx / dist) * strength;
         btnVelY += (dy / dist) * strength;
         showDodgeMessage();
@@ -1100,7 +1204,6 @@
       const speed = Math.hypot(btnVelX, btnVelY);
       trackEscapeBurst(speed, fleeing);
       checkPointerOnNo();
-
       requestAnimationFrame(fleeNoButton);
     }
 
@@ -1110,254 +1213,197 @@
       requestAnimationFrame(fleeNoButton);
     }
 
-    function stopDodgeLoop() {
-      dodgeAnimating = false;
-    }
-
     function updatePointer(x, y) {
       mouseX = x;
       mouseY = y;
       checkPointerOnNo();
     }
 
-    document.addEventListener("mousemove", (e) => updatePointer(e.clientX, e.clientY));
-    document.addEventListener("touchstart", (e) => {
-      if (e.touches[0]) updatePointer(e.touches[0].clientX, e.touches[0].clientY);
-    }, { passive: true });
-    document.addEventListener("touchmove", (e) => {
-      if (e.touches[0]) updatePointer(e.touches[0].clientX, e.touches[0].clientY);
-    }, { passive: true });
-
-    async function fetchEmailConfig() {
-      try {
-        const res = await fetch("/api/email-status");
-        emailConfig = await res.json();
-        updateEmailHint();
-      } catch (_) {
-        emailConfig = null;
-      }
-    }
-
-    function updateEmailHint() {
-      const hintEl = document.getElementById("email-hint");
-      if (!emailConfig || !steps.email.classList.contains("active")) return;
-      const input = document.getElementById("user-email");
-      const email = input.value.trim().toLowerCase();
-      const sender = (emailConfig.sender || "").toLowerCase();
-
-      if (emailConfig.resendSandbox && email && email !== sender) {
-        hintEl.className = "status show error";
-        hintEl.textContent =
-          emailConfig.hint ||
-          "Only houhonuhh@gmail.com can receive emails right now. Set up Brevo on Render to email any guest.";
-      } else if (emailConfig.resendSandbox) {
-        hintEl.className = "status show loading";
-        hintEl.textContent =
-          "Testing mode: invitations only send to houhonuhh@gmail.com until Brevo is configured.";
-      } else {
-        hintEl.className = "status";
-        hintEl.textContent = "";
-      }
-    }
-
-    document.getElementById("user-email").addEventListener("input", updateEmailHint);
-    fetchEmailConfig();
-
-    document.querySelectorAll(".lang-btn").forEach((btn) => {
-      btn.addEventListener("click", () => {
-        lang = btn.dataset.lang;
-        localStorage.setItem("macau-lang", lang);
-        applyLanguage();
-        showStep("email");
-      });
-    });
-
-    document.getElementById("back-to-language").addEventListener("click", () => {
-      showStep("language");
-    });
-
-    applyLanguage();
-
-    document.getElementById("email-form").addEventListener("submit", (e) => {
-      e.preventDefault();
-      const input = document.getElementById("user-email");
-      userEmail = input.value.trim();
-      if (!userEmail) return;
-
-      if (
-        emailConfig?.resendSandbox &&
-        userEmail.toLowerCase() !== (emailConfig.sender || "").toLowerCase()
-      ) {
-        alert(
-          "Right now only houhonuhh@gmail.com can receive invitations.\n\n" +
-            "To email any guest: add BREVO_API_KEY on Render (free at brevo.com)."
-        );
-        return;
-      }
-
-      document.getElementById("show-email").textContent = `${t().registered}: ${userEmail}`;
+    function beginInviteStep() {
       document.getElementById("prompt-message").textContent = "";
       resetScores();
       dodgeCount = 0;
       lastDodgeAt = 0;
-      btnNo.classList.remove("dodging");
-      btnNo.style.left = "";
-      btnNo.style.top = "";
-      btnNo.style.width = "";
-
+      resetNoButtonPosition();
       showStep("invite");
       requestAnimationFrame(() => {
         enableNoDodge();
         startDodgeLoop();
       });
+    }
+
+    document.addEventListener("mousemove", (e) => updatePointer(e.clientX, e.clientY));
+    document.addEventListener("touchstart", (e) => {
+      if (!e.touches[0]) return;
+      updatePointer(e.touches[0].clientX, e.touches[0].clientY);
+      if (steps.invite.classList.contains("active")) startDodgeLoop();
+    }, { passive: true });
+    document.addEventListener("touchmove", (e) => {
+      if (!e.touches[0]) return;
+      updatePointer(e.touches[0].clientX, e.touches[0].clientY);
+      if (steps.invite.classList.contains("active") && btnNo.classList.contains("dodging")) {
+        e.preventDefault();
+        startDodgeLoop();
+      }
+    }, { passive: false });
+
+    btnNo.addEventListener("click", explodeNoButton);
+    btnNo.addEventListener("touchend", explodeNoButton, { passive: false });
+    btnNo.addEventListener("touchstart", (e) => {
+      if (!steps.invite.classList.contains("active")) return;
+      if (e.touches[0]) updatePointer(e.touches[0].clientX, e.touches[0].clientY);
+      startDodgeLoop();
+      showDodgeMessage();
+    }, { passive: true });
+
+    document.querySelectorAll('#cuisine-list input[name="cuisine"]').forEach((cb) => {
+      cb.addEventListener("change", updateCuisineCount);
     });
 
-    document.getElementById("btn-yes").addEventListener("click", () => {
-      stopDodgeLoop();
-      resetNoButtonPosition();
-      showStep("activities");
-      updateActivityCount();
+    document.querySelectorAll(".lang-btn").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        lang = btn.dataset.lang;
+        localStorage.setItem("sg-dinner-lang", lang);
+        applyLanguage();
+        showStep("phone");
+      });
     });
 
-    document.getElementById("back-to-email").addEventListener("click", () => {
+    document.getElementById("back-to-language").addEventListener("click", () => {
+      clearStatus(phoneStatus);
+      showStep("language");
+    });
+
+    document.getElementById("phone-form").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const phone = document.getElementById("user-phone").value.trim();
+      const email = document.getElementById("user-email").value.trim().toLowerCase();
+      const name = document.getElementById("user-name").value.trim();
+      if (!phone) return;
+      if (!email || !email.includes("@")) {
+        setStatus(phoneStatus, "error", t().alertEmail);
+        return;
+      }
+
+      btnRegister.disabled = true;
+      setStatus(phoneStatus, "loading", t().sendingPhone);
+
+      try {
+        const res = await fetch("/api/register-phone", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ phone, email, name, language: lang }),
+        });
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok) throw new Error(data.error || "Registration failed.");
+
+        userPhone = data.phone || phone;
+        userEmail = data.email || email;
+        userName = name;
+        clearStatus(phoneStatus);
+        beginInviteStep();
+      } catch (err) {
+        setStatus(phoneStatus, "error", err.message || "Something went wrong.");
+      } finally {
+        btnRegister.disabled = false;
+      }
+    });
+
+    document.getElementById("back-to-phone").addEventListener("click", () => {
       stopDodgeLoop();
       resetNoButtonPosition();
-      showStep("email");
+      showStep("phone");
+    });
+
+    btnYes.addEventListener("click", () => {
+      stopDodgeLoop();
+      resetNoButtonPosition();
+      showStep("cuisine");
+      updateCuisineCount();
     });
 
     document.getElementById("back-to-invite").addEventListener("click", () => {
-      showStep("invite");
-      requestAnimationFrame(() => {
-        if (!btnNo.classList.contains("dodging")) enableNoDodge();
-        startDodgeLoop();
-      });
+      beginInviteStep();
     });
 
-    document.getElementById("back-to-activities").addEventListener("click", () => {
-      sendingInvitation = false;
-      document.getElementById("status").className = "status";
-      document.getElementById("send-btn").disabled = !document.getElementById("visit-date").value;
-      showStep("activities");
-    });
-
-    document.getElementById("btn-activities-continue").addEventListener("click", () => {
-      const checked = document.querySelectorAll('#activity-list input[name="activity"]:checked');
-      selectedActivities = Array.from(checked).map((el) => {
-        const id = el.dataset.activityId;
-        const data = t().activities[id] || {};
+    document.getElementById("btn-cuisine-continue").addEventListener("click", () => {
+      const checked = document.querySelectorAll('#cuisine-list input[name="cuisine"]:checked');
+      selectedCuisines = Array.from(checked).map((el) => {
+        const id = el.dataset.cuisineId;
+        const data = t().cuisines[id] || {};
         return { id, name: data.name || id, description: data.desc || "" };
       });
-
-      if (selectedActivities.length === 0) {
-        alert(t().alertActivity);
+      if (selectedCuisines.length === 0) {
+        alert(t().alertCuisine);
         return;
       }
 
       showStep("date");
       const today = new Date().toISOString().slice(0, 10);
-      const dateInput = document.getElementById("visit-date");
-      const sendBtn = document.getElementById("send-btn");
+      const dateInput = document.getElementById("dinner-date");
       dateInput.min = today;
       dateInput.value = "";
-      document.getElementById("formatted-date").textContent = t().selected + ": —";
-      sendBtn.disabled = true;
-      sendingInvitation = false;
-      document.getElementById("status").className = "status";
-      checkEmailReady();
+      document.getElementById("formatted-date").textContent = `${t().selected}: —`;
+      btnSend.disabled = true;
+      sendingRsvp = false;
+      clearStatus(dateStatus);
     });
 
-    async function checkEmailReady() {
-      const statusEl = document.getElementById("status");
-      await fetchEmailConfig();
-      if (!emailConfig) return;
-
-      if (!emailConfig.configured) {
-        statusEl.className = "status show error";
-        statusEl.textContent = emailConfig.hint || "Email not configured on the server.";
-      } else if (emailConfig.resendSandbox) {
-        const sender = (emailConfig.sender || "").toLowerCase();
-        if (userEmail.toLowerCase() !== sender) {
-          statusEl.className = "status show error";
-          statusEl.textContent = emailConfig.hint || GUEST_EMAIL_FALLBACK;
-        }
-      } else {
-        statusEl.className = "status";
-        statusEl.textContent = "";
-      }
-    }
-
-    const GUEST_EMAIL_FALLBACK =
-      "Add BREVO_API_KEY on Render to email guests (free at brevo.com).";
-
-    btnNo.addEventListener("click", explodeNoButton);
-    btnNo.addEventListener("touchend", (e) => {
-      e.preventDefault();
-      explodeNoButton(e);
+    document.getElementById("back-to-cuisine").addEventListener("click", () => {
+      sendingRsvp = false;
+      clearStatus(dateStatus);
+      btnSend.disabled = !document.getElementById("dinner-date").value;
+      showStep("cuisine");
     });
 
-    let sendingInvitation = false;
-
-    async function sendInvitation(isoDate) {
-      if (!isoDate || !userEmail || sendingInvitation) return;
-
-      const formatted = formatDateYyyyDdMm(isoDate);
-      const statusEl = document.getElementById("status");
-      const sendBtn = document.getElementById("send-btn");
-
-      sendingInvitation = true;
-      statusEl.className = "status show loading";
-      statusEl.textContent = `Sending invitation to ${userEmail}…`;
-      sendBtn.disabled = true;
-
-      try {
-        const res = await fetch("/api/send-invitation", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "Bypass-Tunnel-Reminder": "true",
-          },
-          body: JSON.stringify({
-            email: userEmail,
-            date: formatted,
-            isoDate,
-            activities: selectedActivities,
-          }),
-        });
-
-        const data = await res.json().catch(() => ({}));
-
-        if (!res.ok) {
-          throw new Error(data.error || "Could not send email. Is the server running?");
-        }
-
-        statusEl.className = "status show success";
-        statusEl.textContent = data.message || "Sent! Check inbox and spam.";
-        showStep("done");
-      } catch (err) {
-        statusEl.className = "status show error";
-        statusEl.textContent = err.message || "Something went wrong.";
-        sendingInvitation = false;
-        sendBtn.disabled = false;
-      }
-    }
-
-    document.getElementById("visit-date").addEventListener("change", (e) => {
-      const isoDate = e.target.value;
-      const sendBtn = document.getElementById("send-btn");
+    document.getElementById("dinner-date").addEventListener("change", (e) => {
+      const iso = e.target.value;
       document.getElementById("formatted-date").textContent =
-        t().selected + ": " + formatDateYyyyDdMm(isoDate);
-      sendBtn.disabled = !isoDate;
+        `${t().selected}: ${formatDateYyyyDdMm(iso)}`;
+      btnSend.disabled = !iso || sendingRsvp;
     });
 
-    document.getElementById("date-form").addEventListener("submit", (e) => {
-      e.preventDefault();
-      const isoDate = document.getElementById("visit-date").value;
+    btnSend.addEventListener("click", async () => {
+      const isoDate = document.getElementById("dinner-date").value;
       if (!isoDate) {
         alert(t().alertDate);
         return;
       }
-      sendInvitation(isoDate);
+      if (sendingRsvp) return;
+      sendingRsvp = true;
+      btnSend.disabled = true;
+      setStatus(dateStatus, "loading", t().sendingRsvp);
+
+      try {
+        const res = await fetch("/api/send-dinner-rsvp", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            phone: userPhone,
+            email: userEmail,
+            name: userName,
+            language: lang,
+            date: formatDateYyyyDdMm(isoDate),
+            isoDate,
+            cuisines: selectedCuisines,
+          }),
+        });
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok) throw new Error(data.error || "Failed to send RSVP.");
+
+        const cuisineNames = selectedCuisines.map((c) => c.name).join(", ");
+        const who = userName ? `${userName} · ${userPhone}` : userPhone;
+        document.getElementById("done-summary").textContent =
+          `${t().registeredAs}: ${who}\n${userEmail}\n${formatDateYyyyDdMm(isoDate)} · ${cuisineNames}`;
+        showStep("done");
+      } catch (err) {
+        setStatus(dateStatus, "error", err.message || "Something went wrong.");
+        sendingRsvp = false;
+        btnSend.disabled = !document.getElementById("dinner-date").value;
+      }
     });
+
+    applyLanguage();
   </script>
 </body>
 </html>

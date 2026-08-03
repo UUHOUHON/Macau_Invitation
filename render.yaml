@@ -8,6 +8,8 @@ services:
     envVars:
       - key: SENDER_EMAIL
         value: houhonuhh@gmail.com
+      - key: HOST_NOTIFY_EMAIL
+        value: houhonuhh@gmail.com
       - key: GMAIL_APP_PASSWORD
         sync: false
       - key: RESEND_API_KEY
@@ -15,6 +17,6 @@ services:
       - key: BREVO_API_KEY
         sync: false
       - key: RESEND_FROM
-        value: Macau Invitation <onboarding@resend.dev>
+        value: Singapore Dinner <onboarding@resend.dev>
       - key: FLASK_DEBUG
         value: "0"

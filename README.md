@@ -1,6 +1,6 @@
-# Macau Invitation Webpage
+# Singapore Dinner Invitation
 
-A simple invitation flow: register email → accept Macau invite → pick activities → pick a date → receive an email from `houhonuhh@gmail.com`.
+Guests pick a language, register phone + email, say yes to dinner (the No button dodges on phone and desktop), choose cuisine and a date. You get notified at `houhonuhh@gmail.com`, and guests get a booking confirmation email.
 
 ## Run locally
 
@@ -19,22 +19,18 @@ A simple invitation flow: register email → accept Macau invite → pick activi
 
 4. Open [http://127.0.0.1:5000](http://127.0.0.1:5000)
 
-## Public link (permanent — no tunnel)
+## Public link (Render)
 
-Deploy to **[Render](https://render.com)** for a stable URL like `https://macau-invitation.onrender.com`:
+Deploy to **[Render](https://render.com)** for a stable public URL:
 
-1. Code is hosted at [github.com/UUHOUHON/Macau_Invitation](https://github.com/UUHOUHON/Macau_Invitation).
-2. Sign in to [Render](https://dashboard.render.com) → **New** → **Blueprint** → select **Macau_Invitation**.
-3. Render reads `render.yaml` automatically.
-4. When prompted, set **`GMAIL_APP_PASSWORD`** to your 16-character Google App Password.
-5. Click **Apply** — your public URL appears on the service page when deploy finishes.
-
-Share that Render URL with anyone. No tunnel, no keeping your PC on.
+1. Code is at [github.com/UUHOUHON/Macau_Invitation](https://github.com/UUHOUHON/Macau_Invitation).
+2. On Render, set `BREVO_API_KEY` (recommended) so confirmation emails can reach any guest. Resend free sandbox only emails your own Gmail.
+3. Keep `SENDER_EMAIL` / `HOST_NOTIFY_EMAIL` as `houhonuhh@gmail.com`.
 
 ## Flow
 
-1. User enters their email.
-2. “Would you accept the invitation to Macau?” — **No** dodges the cursor with Singlish messages.
-3. **Yes** → choose activities in Macau.
-4. Pick a date (`YYYY/DD/MM`) — invitation email sends automatically.
-5. Email includes chosen date and activities.
+1. Guest chooses a language.
+2. Guest registers phone + email → emailed to `houhonuhh@gmail.com`.
+3. “Interested in dinner?” — **No** dodges on mobile and desktop; **Yes** continues.
+4. Pick cuisine(s) and a dinner date.
+5. Host gets the RSVP; guest gets a “successfully booked” invitation email.
