@@ -272,15 +272,22 @@
     .btn-no.dodging {
       position: fixed;
       z-index: 10001;
-      width: auto;
-      min-width: 11rem;
+      width: 11.5rem !important;
+      min-width: 11.5rem;
       min-height: 110px;
-      padding: 1.75rem 2rem;
+      padding: 1.75rem 1.5rem;
       font-size: 1.75rem;
       line-height: 1.2;
       margin: 0;
-      box-shadow: 0 14px 36px rgba(12, 27, 42, 0.38);
+      border: 3px solid #e8a838;
+      box-shadow: 0 14px 36px rgba(12, 27, 42, 0.38), 0 0 0 6px rgba(232, 168, 56, 0.25);
+      animation: no-pulse 1.1s ease-in-out infinite;
       touch-action: none;
+    }
+
+    @keyframes no-pulse {
+      0%, 100% { box-shadow: 0 14px 36px rgba(12, 27, 42, 0.38), 0 0 0 4px rgba(232, 168, 56, 0.2); }
+      50% { box-shadow: 0 16px 40px rgba(12, 27, 42, 0.42), 0 0 0 12px rgba(232, 168, 56, 0.12); }
     }
 
     .btn-no.exploding { visibility: hidden; }
@@ -504,10 +511,6 @@
               <strong>English (Singapore)</strong>
               <span>Come join us for dinner lah</span>
             </button>
-            <button type="button" class="lang-btn" data-lang="zh-TW">
-              <strong>繁體中文（台灣）</strong>
-              <span>晚餐邀請</span>
-            </button>
             <button type="button" class="lang-btn" data-lang="yue">
               <strong>廣東話</strong>
               <span>晚餐邀請</span>
@@ -719,80 +722,6 @@
           "Wah piang, you so fierce — but Yes is still the right answer!",
         ],
       },
-      "zh-TW": {
-        eyebrowLanguage: "邀請函",
-        brandLanguage: "晚餐邀請",
-        subtitleLanguage: "請選擇語言以繼續。",
-        back: "← 返回",
-        eyebrowPhone: "回覆",
-        brandPhone: "誠摯邀請你",
-        subtitlePhone: "請登記手機號碼與電子郵件，參加我們的新加坡晚餐。",
-        labelName: "你的名字（選填）",
-        labelPhone: "手機號碼",
-        phoneHint: "建議加上國碼（例如 +65）。",
-        labelEmail: "電子郵件",
-        emailHint: "晚餐預約確認會寄到這個信箱。",
-        namePlaceholder: "小明",
-        phonePlaceholder: "+65 9123 4567",
-        emailPlaceholder: "you@example.com",
-        btnRegister: "登記",
-        sendingPhone: "正在傳送你的登記資料…",
-        alertEmail: "請輸入有效的電子郵件。",
-        eyebrowInvite: "晚餐",
-        brandInvite: "你有興趣一起吃晚餐嗎？",
-        btnYes: "好啊！一起吃！",
-        btnNo: "不要",
-        scoreboard: "計分板",
-        escapes: "「不要」逃跑次數",
-        rejectScore: "拒絕你的拒絕",
-        rejectLog: "拒絕訊息",
-        logPlaceholder: "追「不要」按鈕時訊息會顯示在這裡…",
-        eyebrowCuisine: "菜單",
-        brandCuisine: "想吃什麼料理？",
-        subtitleCuisine: "可複選當晚想吃的料理。",
-        cuisine0: "已選 0 種料理",
-        cuisine1: "已選 1 種料理",
-        cuisineN: "種料理已選",
-        btnCuisine: "繼續選擇日期",
-        alertCuisine: "請至少選一種料理！",
-        cuisines: {
-          chinese: { name: "中式／煮炒", desc: "共享菜色、砂鍋與新加坡經典煮炒。" },
-          malay: { name: "馬來／印尼", desc: "椰漿飯氛圍、參峇與豐盛馬來菜。" },
-          indian: { name: "印度菜", desc: "香蕉葉、烤餅與香濃咖哩。" },
-          japanese: { name: "日本料理", desc: "壽司、拉麵、燒鳥 — 清爽又療癒。" },
-          korean: { name: "韓式", desc: "烤肉、熱湯與小菜一起分享。" },
-          seafood: { name: "海鮮", desc: "辣椒螃蟹精神、炭烤與鮮味海鮮。" },
-          hotpot: { name: "火鍋", desc: "湯底、沾醬與一桌慢慢吃。" },
-          western: { name: "西餐／牛排", desc: "牛排、義大利麵與正式晚餐。" },
-        },
-        eyebrowDate: "快完成了",
-        brandDate: "選擇晚餐日期",
-        subtitleDate: "選好晚上，再確認回覆。",
-        labelDate: "日期",
-        selected: "已選",
-        btnSend: "確認晚餐回覆",
-        sendingRsvp: "正在傳送你的晚餐回覆…",
-        alertDate: "請先選擇日期。",
-        eyebrowDone: "已確認",
-        brandDone: "你已在名單上",
-        subtitleDone: "謝謝！預約確認已寄到你的電子郵件。",
-        registeredAs: "已登記",
-        noMessages: [
-          "確定嗎？", "再想一下？", "哇，你認真的？",
-          "不要晚餐太可惜了！", "真的不要嗎？",
-          "別鬧了，點「好啊」！", "再確認一次好不好？",
-          "不行啦，一定要來！", "你在想什麼啊？",
-          "超好吃的行程欸，就點好啊！", "「不要」按鈕開始跑了！",
-          "穩穩的 — 點好啊就對了！",
-        ],
-        mockMessages: [
-          "砰！你把「不要」炸掉了 — 還是不來晚餐嗎？",
-          "不錯試啦…但按鈕又回來了。點好啊！",
-          "你的拒絕被拒絕了！",
-          "唉呀，連按鈕都受不了你！",
-          "哇你好猛 — 但還是點好啊比較對！",
-        ],
-      },
       yue: {
         eyebrowLanguage: "邀請",
         brandLanguage: "晚餐邀請",
@@ -870,6 +799,10 @@
     };
 
     let lang = localStorage.getItem("sg-dinner-lang") || "en-SG";
+    if (lang !== "en-SG" && lang !== "yue") {
+      lang = "en-SG";
+      localStorage.setItem("sg-dinner-lang", lang);
+    }
     let userPhone = "";
     let userEmail = "";
     let userName = "";
@@ -893,11 +826,11 @@
     let sendingRsvp = false;
 
     const isCoarsePointer = () => window.matchMedia("(pointer: coarse)").matches;
-    const AVOID_RADIUS = () => (isCoarsePointer() ? 170 : 120);
+    const AVOID_RADIUS = () => (isCoarsePointer() ? 110 : 90);
     const DODGE_COOLDOWN = 700;
     const PAD = 12;
     const FRICTION = 0.82;
-    const FLEE_FORCE = () => (isCoarsePointer() ? 3.6 : 2.8);
+    const FLEE_FORCE = () => (isCoarsePointer() ? 2.2 : 1.8);
     const STOP_SPEED = 0.45;
     const STOP_FRAMES = 14;
 
@@ -1081,16 +1014,42 @@
       btnNo.style.width = "";
     }
 
+    function getNoSize() {
+      return { width: 184, height: Math.max(btnNo.offsetHeight || 110, 110) };
+    }
+
+    function getPlayBounds(width, height) {
+      const card = document.getElementById("main-card").getBoundingClientRect();
+      const pad = 10;
+      let minL = card.left + pad;
+      let maxL = card.right - width - pad;
+      let minT = card.top + pad;
+      let maxT = card.bottom - height - pad;
+      if (maxL < minL) {
+        minL = Math.max(PAD, card.left);
+        maxL = Math.max(minL, Math.min(window.innerWidth - width - PAD, card.right - width));
+      }
+      if (maxT < minT) {
+        minT = Math.max(PAD, card.top);
+        maxT = Math.max(minT, Math.min(window.innerHeight - height - PAD, card.bottom - height));
+      }
+      return { minL, maxL, minT, maxT };
+    }
+
     function enableNoDodge() {
+      const size = getNoSize();
       const rect = btnNo.getBoundingClientRect();
       btnNo.classList.add("dodging");
-      btnPosX = rect.left;
+      btnNo.style.width = size.width + "px";
+      btnPosX = rect.left + Math.max(0, (rect.width - size.width) / 2);
       btnPosY = rect.top;
+      const clamped = clampButtonPosition(btnPosX, btnPosY, size.width, size.height);
+      btnPosX = clamped.left;
+      btnPosY = clamped.top;
       btnVelX = 0;
       btnVelY = 0;
       btnNo.style.left = btnPosX + "px";
       btnNo.style.top = btnPosY + "px";
-      btnNo.style.width = rect.width + "px";
       escapeBurstActive = false;
       stoppedFrames = 0;
     }
@@ -1131,18 +1090,22 @@
     }
 
     function clampButtonPosition(left, top, width, height) {
+      const b = getPlayBounds(width, height);
       return {
-        left: Math.max(PAD, Math.min(window.innerWidth - width - PAD, left)),
-        top: Math.max(PAD, Math.min(window.innerHeight - height - PAD, top)),
+        left: Math.max(b.minL, Math.min(b.maxL, left)),
+        top: Math.max(b.minT, Math.min(b.maxT, top)),
       };
     }
 
     function respawnNoButton() {
-      const bw = parseFloat(btnNo.style.width) || 88;
-      const bh = btnNo.offsetHeight || 44;
+      const size = getNoSize();
+      const bw = size.width;
+      const bh = size.height;
+      btnNo.style.width = bw + "px";
+      const bounds = getPlayBounds(bw, bh);
       const pos = clampButtonPosition(
-        PAD + Math.random() * (window.innerWidth - bw - PAD * 2),
-        PAD + Math.random() * (window.innerHeight - bh - PAD * 2),
+        bounds.minL + Math.random() * Math.max(1, bounds.maxL - bounds.minL),
+        bounds.minT + Math.random() * Math.max(1, bounds.maxT - bounds.minT),
         bw,
         bh
       );
