@@ -1056,6 +1056,8 @@
       const otherInput = document.getElementById("other-cuisine-text");
       if (otherInput) otherInput.placeholder = tr.otherPlaceholder;
       syncOtherCuisineField();
+      const disappointedText = document.getElementById("disappointed-text");
+      if (disappointedText) disappointedText.textContent = tr.disappointed;
     }
 
     function formatDateYyyyDdMm(isoDate) {
