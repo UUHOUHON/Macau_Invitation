@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: macau-invitation-web
+    name: dinner-invitation
     runtime: python
     plan: free
     buildCommand: pip install -r requirements.txt

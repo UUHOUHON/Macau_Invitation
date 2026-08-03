@@ -21,11 +21,12 @@ Guests pick a language, register phone + email, say yes to dinner (the No button
 
 ## Public link (Render)
 
-Deploy to **[Render](https://render.com)** for a stable public URL:
+Deploy to **[Render](https://render.com)** for a stable public URL like `https://dinner-invitation.onrender.com`:
 
 1. Code is at [github.com/UUHOUHON/Macau_Invitation](https://github.com/UUHOUHON/Macau_Invitation).
 2. On Render, set `BREVO_API_KEY` (recommended) so confirmation emails can reach any guest. Resend free sandbox only emails your own Gmail.
 3. Keep `SENDER_EMAIL` / `HOST_NOTIFY_EMAIL` as `houhonuhh@gmail.com`.
+4. If the site still uses the old name, open the service → **Settings** → rename to `dinner-invitation` (URL becomes `https://dinner-invitation.onrender.com`).
 
 ## Flow
 
