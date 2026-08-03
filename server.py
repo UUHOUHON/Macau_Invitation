@@ -1,5 +1,5 @@
 """
-Singapore dinner invitation server — emails guest phone numbers to the host.
+Dinner invitation server — emails guest details and booking confirmations.
 """
 
 import json
@@ -24,11 +24,11 @@ HOST_NOTIFY_EMAIL = os.environ.get("HOST_NOTIFY_EMAIL", SENDER_EMAIL).strip()
 GMAIL_APP_PASSWORD = os.environ.get("GMAIL_APP_PASSWORD", "").replace(" ", "")
 RESEND_API_KEY = os.environ.get("RESEND_API_KEY", "").strip()
 RESEND_FROM = os.environ.get(
-    "RESEND_FROM", "Singapore Dinner <onboarding@resend.dev>"
+    "RESEND_FROM", "Dinner Invitation <onboarding@resend.dev>"
 ).strip()
 BREVO_API_KEY = os.environ.get("BREVO_API_KEY", "").strip()
 
-APP_NAME = "Singapore Dinner Invitation"
+APP_NAME = "Dinner Invitation"
 
 GUEST_EMAIL_HELP = (
     "Resend free plan only sends to houhonuhh@gmail.com. "
@@ -153,7 +153,7 @@ def send_via_brevo(recipient: str, subject: str, body: str, html_body: str | Non
             "api-key": BREVO_API_KEY,
             "Content-Type": "application/json",
             "Accept": "application/json",
-            "User-Agent": "singapore-dinner-invite/1.0",
+            "User-Agent": "dinner-invitation/1.0",
         },
         method="POST",
     )
@@ -187,7 +187,7 @@ def send_via_resend(recipient: str, subject: str, body: str, html_body: str | No
         headers={
             "Authorization": f"Bearer {RESEND_API_KEY}",
             "Content-Type": "application/json",
-            "User-Agent": "singapore-dinner-invite/1.0 (Render)",
+            "User-Agent": "dinner-invitation/1.0 (Render)",
             "Accept": "application/json",
         },
         method="POST",
@@ -486,7 +486,7 @@ def send_verification():
         return jsonify({"error": APP_PASSWORD_HELP}), 503
 
     subject = f"{APP_NAME} — email verification test"
-    body = f"""This is a test email from your Singapore dinner invitation app.
+    body = f"""This is a test email from your Dinner Invitation app.
 
 If you received this, email is working for {SENDER_EMAIL}.
 Host notify address: {HOST_NOTIFY_EMAIL}

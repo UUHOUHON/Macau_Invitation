@@ -1,4 +1,4 @@
-# Singapore Dinner Invitation
+# Dinner Invitation
 
 Guests pick a language, register phone + email, say yes to dinner (the No button dodges on phone and desktop), choose cuisine and a date. You get notified at `houhonuhh@gmail.com`, and guests get a booking confirmation email.
 

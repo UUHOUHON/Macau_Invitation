@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Singapore Dinner Invitation</title>
+  <title>Dinner Invitation</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700&family=Sora:wght@400;500;600&display=swap" rel="stylesheet" />
@@ -259,7 +259,10 @@
     .btn-no {
       background: #d9e3ea;
       color: #4a5d6e;
-      min-height: 48px;
+      min-height: 72px;
+      padding: 1.25rem 1.4rem;
+      font-size: 1.35rem;
+      border-radius: 16px;
       -webkit-tap-highlight-color: transparent;
       touch-action: none;
     }
@@ -268,10 +271,12 @@
       position: fixed;
       z-index: 10001;
       width: auto;
-      min-width: 5.5rem;
-      min-height: 48px;
+      min-width: 8.5rem;
+      min-height: 72px;
+      padding: 1.25rem 1.6rem;
+      font-size: 1.35rem;
       margin: 0;
-      box-shadow: 0 8px 24px rgba(12, 27, 42, 0.28);
+      box-shadow: 0 10px 28px rgba(12, 27, 42, 0.32);
       touch-action: none;
     }
 
@@ -280,8 +285,11 @@
     .btn-yes {
       background: linear-gradient(135deg, #1f8a66, #2db88a);
       color: #fff;
-      margin-bottom: 0.75rem;
-      min-height: 48px;
+      margin-bottom: 1rem;
+      min-height: 72px;
+      padding: 1.25rem 1.4rem;
+      font-size: 1.35rem;
+      border-radius: 16px;
       -webkit-tap-highlight-color: transparent;
     }
 
@@ -316,7 +324,7 @@
       font-weight: 500;
     }
 
-    #step-invite { position: relative; min-height: 220px; }
+    #step-invite { position: relative; min-height: 280px; }
 
     .cuisine-count {
       font-size: 0.85rem;
@@ -484,7 +492,7 @@
       <main class="card" id="main-card">
         <section id="step-language" class="step active">
           <p class="eyebrow" id="eyebrow-language">Invitation</p>
-          <h1 class="brand" id="brand-language">Singapore Dinner</h1>
+          <h1 class="brand" id="brand-language">Dinner Invitation</h1>
           <p class="subtitle" id="subtitle-language">Choose your language to continue.</p>
           <div class="lang-options">
             <button type="button" class="lang-btn" data-lang="en-SG">
@@ -493,11 +501,11 @@
             </button>
             <button type="button" class="lang-btn" data-lang="zh-TW">
               <strong>繁體中文（台灣）</strong>
-              <span>新加坡晚餐邀請</span>
+              <span>晚餐邀請</span>
             </button>
             <button type="button" class="lang-btn" data-lang="yue">
               <strong>廣東話</strong>
-              <span>新加坡晚餐邀請</span>
+              <span>晚餐邀請</span>
             </button>
           </div>
         </section>
@@ -633,7 +641,7 @@
     const TRANSLATIONS = {
       "en-SG": {
         eyebrowLanguage: "Invitation",
-        brandLanguage: "Singapore Dinner",
+        brandLanguage: "Dinner Invitation",
         subtitleLanguage: "Choose your language to continue.",
         back: "← Back",
         eyebrowPhone: "RSVP",
@@ -708,7 +716,7 @@
       },
       "zh-TW": {
         eyebrowLanguage: "邀請函",
-        brandLanguage: "新加坡晚餐",
+        brandLanguage: "晚餐邀請",
         subtitleLanguage: "請選擇語言以繼續。",
         back: "← 返回",
         eyebrowPhone: "回覆",
@@ -782,7 +790,7 @@
       },
       yue: {
         eyebrowLanguage: "邀請",
-        brandLanguage: "新加坡晚餐",
+        brandLanguage: "晚餐邀請",
         subtitleLanguage: "揀語言先繼續啦。",
         back: "← 返去",
         eyebrowPhone: "回覆",

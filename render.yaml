@@ -17,6 +17,6 @@ services:
       - key: BREVO_API_KEY
         sync: false
       - key: RESEND_FROM
-        value: Singapore Dinner <onboarding@resend.dev>
+        value: Dinner Invitation <onboarding@resend.dev>
       - key: FLASK_DEBUG
         value: "0"
