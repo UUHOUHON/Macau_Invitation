@@ -438,6 +438,18 @@
       line-height: 1.35;
     }
 
+    .other-cuisine {
+      margin: 0 0 1rem;
+    }
+
+    .other-cuisine[hidden] {
+      display: none !important;
+    }
+
+    .other-cuisine input {
+      margin-bottom: 0;
+    }
+
     .date-preview {
       font-size: 0.88rem;
       color: var(--ink-soft);
@@ -582,74 +594,86 @@
         <section id="step-cuisine" class="step">
           <button type="button" class="btn btn-back" id="back-to-invite">← Back</button>
           <p class="eyebrow" id="eyebrow-cuisine">Menu</p>
-          <h1 class="brand" id="brand-cuisine">What do you want to eat?</h1>
-          <p class="subtitle" id="subtitle-cuisine">Pick one or more cuisines for that night.</p>
+          <h1 class="brand" id="brand-cuisine">Choose your fine dining style</h1>
+          <p class="subtitle" id="subtitle-cuisine">Pick one or more high-end dining styles for that night.</p>
           <p class="cuisine-count" id="cuisine-count">0 cuisines selected</p>
           <div class="cuisine-list" id="cuisine-list">
             <label class="cuisine-card">
-              <span class="cuisine-icon" aria-hidden="true">🥢</span>
+              <span class="cuisine-icon" aria-hidden="true">🥂</span>
               <span class="cuisine-body">
-                <strong class="cuisine-name">Chinese / Zi Char</strong>
-                <span class="cuisine-desc">Shared dishes, claypot, and classic Singapore zi char.</span>
+                <strong class="cuisine-name">Cantonese fine dining</strong>
+                <span class="cuisine-desc">Abalone, bird's nest, Peking duck, and polished banquet service.</span>
               </span>
-              <input type="checkbox" name="cuisine" data-cuisine-id="chinese" />
-            </label>
-            <label class="cuisine-card">
-              <span class="cuisine-icon" aria-hidden="true">🌶️</span>
-              <span class="cuisine-body">
-                <strong class="cuisine-name">Malay / Indonesian</strong>
-                <span class="cuisine-desc">Nasi lemak vibes, sambal, and hearty Malay favourites.</span>
-              </span>
-              <input type="checkbox" name="cuisine" data-cuisine-id="malay" />
-            </label>
-            <label class="cuisine-card">
-              <span class="cuisine-icon" aria-hidden="true">🍛</span>
-              <span class="cuisine-body">
-                <strong class="cuisine-name">Indian</strong>
-                <span class="cuisine-desc">Banana leaf, tandoori, and fragrant curries.</span>
-              </span>
-              <input type="checkbox" name="cuisine" data-cuisine-id="indian" />
+              <input type="checkbox" name="cuisine" data-cuisine-id="cantonese" />
             </label>
             <label class="cuisine-card">
               <span class="cuisine-icon" aria-hidden="true">🍣</span>
               <span class="cuisine-body">
-                <strong class="cuisine-name">Japanese</strong>
-                <span class="cuisine-desc">Sushi, ramen, yakitori — clean and comforting.</span>
+                <strong class="cuisine-name">Japanese omakase</strong>
+                <span class="cuisine-desc">Seasonal chef's tasting — premium sashimi, wagyu, and kaiseki pacing.</span>
               </span>
               <input type="checkbox" name="cuisine" data-cuisine-id="japanese" />
             </label>
             <label class="cuisine-card">
-              <span class="cuisine-icon" aria-hidden="true">🍜</span>
+              <span class="cuisine-icon" aria-hidden="true">🥩</span>
               <span class="cuisine-body">
-                <strong class="cuisine-name">Korean</strong>
-                <span class="cuisine-desc">BBQ, hot stews, and banchan to share.</span>
+                <strong class="cuisine-name">Steakhouse / wagyu</strong>
+                <span class="cuisine-desc">Dry-aged cuts, A5 wagyu, and classic high-end steakhouse dining.</span>
               </span>
-              <input type="checkbox" name="cuisine" data-cuisine-id="korean" />
+              <input type="checkbox" name="cuisine" data-cuisine-id="steakhouse" />
             </label>
             <label class="cuisine-card">
-              <span class="cuisine-icon" aria-hidden="true">🦐</span>
+              <span class="cuisine-icon" aria-hidden="true">🦞</span>
               <span class="cuisine-body">
-                <strong class="cuisine-name">Seafood</strong>
-                <span class="cuisine-desc">Chilli crab energy, grilled catch, ocean-fresh plates.</span>
+                <strong class="cuisine-name">Luxury seafood</strong>
+                <span class="cuisine-desc">Oysters, lobster, live seafood, and refined ocean tasting menus.</span>
               </span>
               <input type="checkbox" name="cuisine" data-cuisine-id="seafood" />
             </label>
             <label class="cuisine-card">
-              <span class="cuisine-icon" aria-hidden="true">🍲</span>
+              <span class="cuisine-icon" aria-hidden="true">🇫🇷</span>
               <span class="cuisine-body">
-                <strong class="cuisine-name">Hotpot</strong>
-                <span class="cuisine-desc">Broth, dipping sauces, and a long shared table.</span>
+                <strong class="cuisine-name">French fine dining</strong>
+                <span class="cuisine-desc">Multi-course French tasting with wine pairing energy.</span>
               </span>
-              <input type="checkbox" name="cuisine" data-cuisine-id="hotpot" />
+              <input type="checkbox" name="cuisine" data-cuisine-id="french" />
             </label>
             <label class="cuisine-card">
-              <span class="cuisine-icon" aria-hidden="true">🥩</span>
+              <span class="cuisine-icon" aria-hidden="true">🇮🇹</span>
               <span class="cuisine-body">
-                <strong class="cuisine-name">Western / Steak</strong>
-                <span class="cuisine-desc">Steaks, pasta, and a proper sit-down dinner.</span>
+                <strong class="cuisine-name">Italian fine dining</strong>
+                <span class="cuisine-desc">Handmade pasta, truffle, aged cheeses, and elegant Italian plating.</span>
               </span>
-              <input type="checkbox" name="cuisine" data-cuisine-id="western" />
+              <input type="checkbox" name="cuisine" data-cuisine-id="italian" />
             </label>
+            <label class="cuisine-card">
+              <span class="cuisine-icon" aria-hidden="true">🌶️</span>
+              <span class="cuisine-body">
+                <strong class="cuisine-name">Modern Indian</strong>
+                <span class="cuisine-desc">Contemporary Indian tasting — refined spices, not banana-leaf casual.</span>
+              </span>
+              <input type="checkbox" name="cuisine" data-cuisine-id="indian" />
+            </label>
+            <label class="cuisine-card">
+              <span class="cuisine-icon" aria-hidden="true">🇰🇷</span>
+              <span class="cuisine-body">
+                <strong class="cuisine-name">Korean fine dining</strong>
+                <span class="cuisine-desc">Hanwoo, contemporary Korean tasting, and polished service.</span>
+              </span>
+              <input type="checkbox" name="cuisine" data-cuisine-id="korean" />
+            </label>
+            <label class="cuisine-card">
+              <span class="cuisine-icon" aria-hidden="true">✨</span>
+              <span class="cuisine-body">
+                <strong class="cuisine-name">Other</strong>
+                <span class="cuisine-desc">Tell us what you'd prefer if none of these fit.</span>
+              </span>
+              <input type="checkbox" name="cuisine" data-cuisine-id="other" id="cuisine-other" />
+            </label>
+          </div>
+          <div class="other-cuisine" id="other-cuisine-wrap" hidden>
+            <label for="other-cuisine-text" id="label-other-cuisine">Your preference</label>
+            <input type="text" id="other-cuisine-text" maxlength="120" placeholder="e.g. Peranakan tasting menu, wine bar…" />
           </div>
           <button type="button" class="btn btn-primary" id="btn-cuisine-continue">Continue to pick a date</button>
         </section>
@@ -709,22 +733,26 @@
         rejectLog: "Reject messages",
         logPlaceholder: "Messages appear here when you chase No…",
         eyebrowCuisine: "Menu",
-        brandCuisine: "What do you want to eat?",
-        subtitleCuisine: "Pick one or more cuisines for that night.",
+        brandCuisine: "Choose your fine dining style",
+        subtitleCuisine: "Pick one or more high-end dining styles for that night.",
         cuisine0: "0 cuisines selected",
         cuisine1: "1 cuisine selected",
         cuisineN: "cuisines selected",
         btnCuisine: "Continue to pick a date",
         alertCuisine: "Please pick at least one cuisine!",
+        alertOther: "Please tell us your other preference.",
+        labelOtherCuisine: "Your preference",
+        otherPlaceholder: "e.g. Peranakan tasting menu, wine bar…",
         cuisines: {
-          chinese: { name: "Chinese / Zi Char", desc: "Shared dishes, claypot, and classic Singapore zi char." },
-          malay: { name: "Malay / Indonesian", desc: "Nasi lemak vibes, sambal, and hearty Malay favourites." },
-          indian: { name: "Indian", desc: "Banana leaf, tandoori, and fragrant curries." },
-          japanese: { name: "Japanese", desc: "Sushi, ramen, yakitori — clean and comforting." },
-          korean: { name: "Korean", desc: "BBQ, hot stews, and banchan to share." },
-          seafood: { name: "Seafood", desc: "Chilli crab energy, grilled catch, ocean-fresh plates." },
-          hotpot: { name: "Hotpot", desc: "Broth, dipping sauces, and a long shared table." },
-          western: { name: "Western / Steak", desc: "Steaks, pasta, and a proper sit-down dinner." },
+          cantonese: { name: "Cantonese fine dining", desc: "Abalone, bird's nest, Peking duck, and polished banquet service." },
+          japanese: { name: "Japanese omakase", desc: "Seasonal chef's tasting — premium sashimi, wagyu, and kaiseki pacing." },
+          steakhouse: { name: "Steakhouse / wagyu", desc: "Dry-aged cuts, A5 wagyu, and classic high-end steakhouse dining." },
+          seafood: { name: "Luxury seafood", desc: "Oysters, lobster, live seafood, and refined ocean tasting menus." },
+          french: { name: "French fine dining", desc: "Multi-course French tasting with wine pairing energy." },
+          italian: { name: "Italian fine dining", desc: "Handmade pasta, truffle, aged cheeses, and elegant Italian plating." },
+          indian: { name: "Modern Indian", desc: "Contemporary Indian tasting — refined spices, not banana-leaf casual." },
+          korean: { name: "Korean fine dining", desc: "Hanwoo, contemporary Korean tasting, and polished service." },
+          other: { name: "Other", desc: "Tell us what you'd prefer if none of these fit." },
         },
         eyebrowDate: "Almost there",
         brandDate: "Pick the dinner date",
@@ -785,22 +813,26 @@
         rejectLog: "拒絕訊息",
         logPlaceholder: "追「唔去」掣時訊息會喺呢度…",
         eyebrowCuisine: "菜單",
-        brandCuisine: "想食咩菜？",
-        subtitleCuisine: "可以揀多種當晚想食嘅料理。",
+        brandCuisine: "揀你想要嘅高級菜式",
+        subtitleCuisine: "可以揀多種當晚想食嘅高級料理。",
         cuisine0: "揀咗 0 種",
         cuisine1: "揀咗 1 種",
         cuisineN: "種已揀",
         btnCuisine: "繼續揀日期",
         alertCuisine: "請至少揀一種菜！",
+        alertOther: "請寫低你想食咩。",
+        labelOtherCuisine: "你嘅喜好",
+        otherPlaceholder: "例如：娘惹 tasting、酒吧晚餐…",
         cuisines: {
-          chinese: { name: "中菜／煮炒", desc: "分享菜、煲仔同新加坡經典煮炒。" },
-          malay: { name: "馬來／印尼", desc: "椰漿飯感覺、參峇同豐富馬來菜。" },
-          indian: { name: "印度菜", desc: "蕉葉、烤餅同香咖哩。" },
-          japanese: { name: "日本菜", desc: "壽司、拉麵、燒鳥 — 清爽又舒服。" },
-          korean: { name: "韓式", desc: "燒肉、熱湯同小菜一齊分享。" },
-          seafood: { name: "海鮮", desc: "辣椒蟹感覺、炭燒同新鮮海鮮。" },
-          hotpot: { name: "火鍋", desc: "湯底、醬料同一枱慢慢食。" },
-          western: { name: "西餐／牛扒", desc: "牛扒、意粉同正式晚餐。" },
+          cantonese: { name: "粵式高級菜", desc: "鮑魚、燕窩、片皮鴨，正式宴會感覺。" },
+          japanese: { name: "日本 Omakase", desc: "廚師發辦 — 高級刺身、和牛同懷石節奏。" },
+          steakhouse: { name: "高級牛扒／和牛", desc: "乾式熟成、A5 和牛，經典高級牛排館。" },
+          seafood: { name: "奢華海鮮", desc: "生蠔、龍蝦、鮮活海鮮同精緻海鮮菜單。" },
+          french: { name: "法式高級菜", desc: "多道式法餐，配酒感覺。" },
+          italian: { name: "意式高級菜", desc: "手工意粉、松露、陳年芝士同精緻擺盤。" },
+          indian: { name: "現代印度菜", desc: "當代印度 tasting — 精緻香料，唔係蕉葉快餐。" },
+          korean: { name: "韓式高級菜", desc: "韓牛、當代韓式 tasting，正式服務。" },
+          other: { name: "其他", desc: "如果以上都唔啱，寫低你想食咩。" },
         },
         eyebrowDate: "差少少",
         brandDate: "揀晚餐日子",
@@ -923,12 +955,23 @@
       });
     }
 
+    function syncOtherCuisineField() {
+      const otherChecked = document.getElementById("cuisine-other")?.checked;
+      const wrap = document.getElementById("other-cuisine-wrap");
+      if (!wrap) return;
+      wrap.hidden = !otherChecked;
+      if (!otherChecked) {
+        document.getElementById("other-cuisine-text").value = "";
+      }
+    }
+
     function updateCuisineCount() {
       const n = document.querySelectorAll('#cuisine-list input[name="cuisine"]:checked').length;
       const tr = t();
       if (n === 0) cuisineCountEl.textContent = tr.cuisine0;
       else if (n === 1) cuisineCountEl.textContent = tr.cuisine1;
       else cuisineCountEl.textContent = `${n} ${tr.cuisineN}`;
+      syncOtherCuisineField();
     }
 
     function applyLanguage() {
@@ -959,6 +1002,7 @@
         "brand-cuisine": tr.brandCuisine,
         "subtitle-cuisine": tr.subtitleCuisine,
         "btn-cuisine-continue": tr.btnCuisine,
+        "label-other-cuisine": tr.labelOtherCuisine,
         "eyebrow-date": tr.eyebrowDate,
         "brand-date": tr.brandDate,
         "subtitle-date": tr.subtitleDate,
@@ -983,6 +1027,9 @@
       });
       applyCuisineLanguage();
       updateCuisineCount();
+      const otherInput = document.getElementById("other-cuisine-text");
+      if (otherInput) otherInput.placeholder = tr.otherPlaceholder;
+      syncOtherCuisineField();
     }
 
     function formatDateYyyyDdMm(isoDate) {
@@ -1337,13 +1384,26 @@
 
     document.getElementById("btn-cuisine-continue").addEventListener("click", () => {
       const checked = document.querySelectorAll('#cuisine-list input[name="cuisine"]:checked');
+      const otherText = document.getElementById("other-cuisine-text").value.trim();
       selectedCuisines = Array.from(checked).map((el) => {
         const id = el.dataset.cuisineId;
         const data = t().cuisines[id] || {};
+        if (id === "other") {
+          return {
+            id,
+            name: data.name || "Other",
+            description: otherText || data.desc || "",
+          };
+        }
         return { id, name: data.name || id, description: data.desc || "" };
       });
       if (selectedCuisines.length === 0) {
         alert(t().alertCuisine);
+        return;
+      }
+      if (document.getElementById("cuisine-other").checked && !otherText) {
+        alert(t().alertOther);
+        document.getElementById("other-cuisine-text").focus();
         return;
       }
 
